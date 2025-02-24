@@ -12,6 +12,5 @@ if ($Global:scoop) {
 Write-SpectreFigletText -Text "Packaroo" -FigletFontPath ".\3d.flf" -Alignment Center -PassThru |  Format-SpectrePanel  -title $title -Border "Rounded" -Color "Magenta1" -Expand
 
 # Write-SpectreRule -Alignment Center -Color Yellow
-Format-SpectrePanel -Border "Rounded" -Expand -Height 20 -Data ""
 
-$BoxChars
+

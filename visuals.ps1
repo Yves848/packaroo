@@ -31,4 +31,4 @@ $BoxChars = @{
 }
 
 # Affichage de la table
-$BoxChars
+# $BoxChars
