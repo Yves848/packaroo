@@ -8,5 +8,7 @@ if ((Get-Module PwshSpectreConsole -ListAvailable).Count -eq 0) {
   # pwshSpectreConsole not installed
 }
 
+$global:scoop = $env:path -match "scoop"
+
 Import-Module Microsoft.WinGet.Client
 Import-Module PwshSpectreConsole
