@@ -3,6 +3,8 @@ param(
   [switch]$W
 )
 
+Import-Module PwshSpectreConsole
+
 $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding
 
 . ./dependencies.ps1
@@ -16,6 +18,21 @@ if ($Global:scoop) {
 }
 Write-SpectreFigletText -Text "Packaroo" -FigletFontPath ".\3d.flf" -Alignment Center -PassThru |  Format-SpectrePanel  -title $title -Border "Rounded" -Color "Magenta1" -Expand
 
+$test = "" | Format-SpectrePanel -Border "Rounded" -Expand -Height 42 | Out-String 
+[system.console]::SetCursorPosition(0,[console]::GetCursorPosition().Item2)
+[System.Console]::CursorVisible = $false
+# $test = $test -replace "`r",""
+$y = [console]::GetCursorPosition().Item2 -1
+$test.Split("`n").ForEach({
+  [system.console]::SetCursorPosition(0,$y)
+  [System.Console]::Write($_)
+  $y++
+})
+
+
+# [System.Console]::Write($test)
+
+$global:Host.UI.RawUI.ReadKey()
 # Write-SpectreRule -Alignment Center -Color Yellow
 
 
@@ -88,7 +105,8 @@ Write-SpectreFigletText -Text "Packaroo" -FigletFontPath ".\3d.flf" -Alignment C
 #   Write-Host "`nInput cancelled."
 # }
 
-Write-Host $args.Count
-Write-Host $args[0]
-Write-Host $args[1]
-Write-Host $Q
+# Write-Host $args.Count
+# Write-Host $args[0]
+# Write-Host $args[1]
+# Write-Host $Q
+

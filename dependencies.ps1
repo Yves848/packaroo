@@ -12,3 +12,6 @@ $global:scoop = $env:path -match "scoop"
 
 Import-Module Microsoft.WinGet.Client
 Import-Module PwshSpectreConsole
+
+$width = $global:host.UI.RawUI.BufferSize.Width
+$height = $global:host.UI.RawUI.BufferSize.Height
