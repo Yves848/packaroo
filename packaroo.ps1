@@ -31,8 +31,6 @@ $test.Split("`n").ForEach({
 [system.console]::SetCursorPosition(10,25)
 [System.Console]::Write("$width $height $h2")
 
-# [System.Console]::Write($test)
-
 $global:Host.UI.RawUI.ReadKey() | Out-Null
 # Write-SpectreRule -Alignment Center -Color Yellow
 
