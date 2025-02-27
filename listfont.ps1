@@ -1,4 +1,3 @@
-$FontName = "FiraCode Nerd Font"  # Adapter le nom ici
 
 $unicodeRange = 0x0000..0xF8FF  # Plage Unicode privée (Nerd Fonts)
 $y = 0

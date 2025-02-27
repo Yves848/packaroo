@@ -16,20 +16,16 @@ if ($Global:scoop) {
 } else {
   $title = " Winget "
 }
-Write-SpectreFigletText -Text "Packaroo" -FigletFontPath ".\3d.flf" -Alignment Center -PassThru |  Format-SpectrePanel  -title $title -Border "Rounded" -Color "Magenta1" -Expand 
+# Write-SpectreFigletText -Text "Packaroo" -FigletFontPath ".\3d.flf" -Alignment Center -PassThru |  Format-SpectrePanel  -title $title -Border "Rounded" -Color "Magenta1" -Expand 
 $h2 = $height - [console]::GetCursorPosition().Item2 -2
-$test = "" | Format-SpectrePanel -Border "Rounded" -Expand -Height $h2 | Out-String 
-[system.console]::SetCursorPosition(0,[console]::GetCursorPosition().Item2)
-[System.Console]::CursorVisible = $false
-# $test = $test -replace "`r",""
-$y = [console]::GetCursorPosition().Item2 -1
-$test.Split("`n").ForEach({
-  [system.console]::SetCursorPosition(0,$y)
-  [System.Console]::Write($_)
-  $y++
-})
+
+$c1 = "█"
+$c2 = ""
+$c3 = ""
 [system.console]::SetCursorPosition(10,25)
 [System.Console]::Write("$width $height $h2")
+
+[system.console]::WriteLine("$c2$c1$c1$c3")
 
 $global:Host.UI.RawUI.ReadKey() | Out-Null
 # Write-SpectreRule -Alignment Center -Color Yellow
