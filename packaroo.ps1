@@ -5,11 +5,11 @@ param(
 
 Import-Module PwshSpectreConsole
 Import-Module Microsoft.WinGet.Client
+$cursorVisibility = [console]::CursorVisible
+[console]::CursorVisible = $false
 
 $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding
 $columns = New-Object 'System.Collections.Generic.List[PSCustomObject]'
-
-$packs = Get-WinGetPackage | where-Object {$_.Source -eq "Winget"}
 
 . ./dependencies.ps1
 . ./visuals.ps1
@@ -40,15 +40,14 @@ function buildFooter {
   }
   $grid = $line + " "
   $line = $BoxChars["VLine"].PadRight($width-2," ")+$BoxChars["VLine"] 
+  $engines = Write-SpectreHost "[White][/][Blue on White]    test     [/][White][/]" -PassThru -NoNewline
+  $engines
+  $line = $line.Remove(2,$engines.Length)
+  $line = $line.Insert(2,$engines)
   $grid += $line + " "
+  $line = $BoxChars["VLine"].PadRight($width-2," ")+$BoxChars["VLine"] 
   $grid += $line + " "
   $line = $BoxChars["BottomLeft"].PadRight($width-2,$BoxChars["HLine"])+$BoxChars["BottomRight"] 
-  # $i = 1
-  # while ($i -lt $columns.Count ) {
-  #   $line = ([string]$line).Remove($columns[$i].start -1,1)
-  #   $line = ([string]$line).Insert($columns[$i].start -1,$BoxChars["TBottom"])
-  #   $i++
-  # }
   $grid += $line + " "
   return $grid
 }
@@ -155,7 +154,9 @@ if ($Global:scoop) {
 $header = builHeader
 $grid = buildGrid
 $footer =  buildFooter
-[system.console]::Write($header+$grid+$Footer)
+Write-SpectreHost "$header$grid$Footer" -NoNewline -PassThru
+$packs = Get-WinGetPackage | where-Object {$_.Source -eq "Winget"}
 # $columns
 $global:Host.UI.RawUI.ReadKey() | Out-Null
 
+[Console]::CursorVisible = $cursorVisibility
