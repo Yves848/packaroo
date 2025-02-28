@@ -15,7 +15,19 @@ $packs = Get-WinGetPackage | where-Object {$_.Source -eq "Winget"}
 . ./visuals.ps1
 
 function  buildGrid {
-
+  $line = $BoxChars["VLine"].PadRight($width-2," ")+$BoxChars["VLine"] 
+  $i = 1
+  while ($i -lt $columns.Count ) {
+    $line = ([string]$line).Remove($columns[$i].start -1,1)
+    $line = ([string]$line).Insert($columns[$i].start -1,$BoxChars["VLine"])
+    $i++
+  }
+  $i = 0
+  while ($i -lt $height - 7) {
+    $grid += $line + " "
+    $i++
+  }
+  return $grid
 }
 
 function buildFooter {
@@ -26,16 +38,18 @@ function buildFooter {
     $line = ([string]$line).Insert($columns[$i].start -1,$BoxChars["TBottom"])
     $i++
   }
-  $grid = line + " "
+  $grid = $line + " "
   $line = $BoxChars["VLine"].PadRight($width-2," ")+$BoxChars["VLine"] 
-  $grid += line + " "
-  $i = 1
-  while ($i -lt $columns.Count ) {
-    $line = ([string]$line).Remove($columns[$i].start -1,1)
-    $line = ([string]$line).Insert($columns[$i].start -1,$BoxChars["TBottom"])
-    $i++
-  }
-  $grid += line + " "
+  $grid += $line + " "
+  $grid += $line + " "
+  $line = $BoxChars["BottomLeft"].PadRight($width-2,$BoxChars["HLine"])+$BoxChars["BottomRight"] 
+  # $i = 1
+  # while ($i -lt $columns.Count ) {
+  #   $line = ([string]$line).Remove($columns[$i].start -1,1)
+  #   $line = ([string]$line).Insert($columns[$i].start -1,$BoxChars["TBottom"])
+  #   $i++
+  # }
+  $grid += $line + " "
   return $grid
 }
 
@@ -136,8 +150,12 @@ if ($Global:scoop) {
 # [System.Console]::BackgroundColor = "Black"
 # [system.Console]::ForegroundColor = "Blue"
 # [system.Console]::WriteLine("$c3")
-[console]::WriteLine("Width : {$width} Height : {$height}")
-builHeader
+# [console]::WriteLine("Width : {$width} Height : {$height}")
+[system.console]::SetCursorPosition(0,0)
+$header = builHeader
+$grid = buildGrid
+$footer =  buildFooter
+[system.console]::Write($header+$grid+$Footer)
 # $columns
 $global:Host.UI.RawUI.ReadKey() | Out-Null
 
