@@ -13,9 +13,35 @@ $packs = Get-WinGetPackage | where-Object {$_.Source -eq "Winget"}
 
 . ./dependencies.ps1
 . ./visuals.ps1
-function buildGrid {
+
+function  buildGrid {
+
+}
+
+function buildFooter {
+  $line = $BoxChars["TLeft"].PadRight($width-2,$BoxChars["HLine"])+$BoxChars["TRight"] 
+  $i = 1
+  while ($i -lt $columns.Count ) {
+    $line = ([string]$line).Remove($columns[$i].start -1,1)
+    $line = ([string]$line).Insert($columns[$i].start -1,$BoxChars["TBottom"])
+    $i++
+  }
+  $grid = line + " "
+  $line = $BoxChars["VLine"].PadRight($width-2," ")+$BoxChars["VLine"] 
+  $grid += line + " "
+  $i = 1
+  while ($i -lt $columns.Count ) {
+    $line = ([string]$line).Remove($columns[$i].start -1,1)
+    $line = ([string]$line).Insert($columns[$i].start -1,$BoxChars["TBottom"])
+    $i++
+  }
+  $grid += line + " "
+  return $grid
+}
+
+function buildColumns {
   $ratio = [Math]::Round(($width)/128,3)
-  $ratio
+  # Column creation & size adaptation using the above ratio
   $c0 = 4
   $c1 = [Math]::Round(52*$ratio)
   $c2 = [Math]::Round(34*$ratio)
@@ -51,7 +77,10 @@ function buildGrid {
     start = $c0+2+$c1+1+$c2+1+$c3+1
     width = $c4
   })
-
+  return $total
+}
+function builHeader {
+  $total = buildColumns
   $top = $BoxChars["TopLeft"].PadRight($total-2,$BoxChars["HLine"])+$BoxChars["TopRight"]
   $i = 1
   while ($i -lt $columns.Count ) {
@@ -68,16 +97,19 @@ function buildGrid {
     $header = ([string]$header).Insert($columns[$i].start,$headers[$i])
     $i++
   }
+  $separator = $BoxChars["TLeft"].PadRight($total-2,$BoxChars["HLine"])+$BoxChars["TRight"]
+  $i = 1
+  while ($i -lt $columns.Count ) {
+    $separator = ([string]$separator).Remove($columns[$i].start -1,1)
+    $separator = ([string]$separator).Insert($columns[$i].start -1,$BoxChars["Cross"])
+    $i++
+  }
   $grid = ""
   $grid += $top + " "
   $grid += $header + " "
-  $grid
-  
+  $grid += $separator + " "
+  return $grid
 }
-
-
-
-
 
 
 [System.Console]::Clear()
@@ -104,8 +136,8 @@ if ($Global:scoop) {
 # [System.Console]::BackgroundColor = "Black"
 # [system.Console]::ForegroundColor = "Blue"
 # [system.Console]::WriteLine("$c3")
-
-buildGrid
+[console]::WriteLine("Width : {$width} Height : {$height}")
+builHeader
 # $columns
-# $global:Host.UI.RawUI.ReadKey() | Out-Null
+$global:Host.UI.RawUI.ReadKey() | Out-Null
 
