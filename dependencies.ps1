@@ -24,17 +24,20 @@ class Pack {
   [string]$id
   [string]$version
   [string]$source
+  [string]$scoopsource
 
   Pack(
     [string]$Name,
     [string]$Id,
     [string]$Version,
-    [string]$Source
+    [string]$Source,
+    [string]$scoopsource = ""
   ) {
     $this.id = $Id
     $this.name = $Name
     $this.source = $source
     $this.version = $version
+    $this.scoopsource = $scoopsource
   }
 }
 
