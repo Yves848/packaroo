@@ -18,3 +18,27 @@ $height = $global:host.UI.RawUI.BufferSize.Height
 
 $headers = @("","Name","Id","Version","Source")
 $script:gh = 0 # grid height
+
+class Pack {
+  [string]$name
+  [string]$id
+  [string]$version
+  [string]$source
+
+  Pack(
+    [string]$Name,
+    [string]$Id,
+    [string]$Version,
+    [string]$Source
+  ) {
+    $this.id = $Id
+    $this.name = $Name
+    $this.source = $source
+    $this.version = $version
+  }
+}
+
+class Line {
+  [bool]$selected
+  [Pack]$package
+}

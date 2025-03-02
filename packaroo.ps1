@@ -13,6 +13,7 @@ $columns = New-Object 'System.Collections.Generic.List[PSCustomObject]'
 
 . ./dependencies.ps1
 . ./visuals.ps1
+. ./functionnal.ps1
 
 function  buildGrid {
   $line = $BoxChars["VLine"].PadRight($width-2," ")+$BoxChars["VLine"] 
@@ -140,9 +141,8 @@ $header = builHeader
 $grid = buildGrid
 $footer =  buildFooter
 Write-Host "$header$grid$Footer" -NoNewline
-$packs = Get-WinGetPackage | where-Object {$_.Source -eq "Winget"}
-$pc = $packs.Count
-Write-Host "gh = $script:gh packs = $pc"
+buildPackages
+# Write-Host "gh = $script:gh packs = $pc"
 $global:Host.UI.RawUI.ReadKey() | Out-Null
 
 [Console]::CursorVisible = $cursorVisibility
