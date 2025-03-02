@@ -14,3 +14,19 @@ function buildPackages {
   }
   return $lines
 }
+
+function displayPackages{
+  param(
+    [System.Collections.Generic.List[Pack]]$list
+  )
+
+  $skip = 0;
+  $selected = 0;
+  while($true) {
+    $visible = $list | Select-Object -skip 0 -First $script:gh
+    if ([console]::KeyAvailable) {
+      [System.Management.Automation.Host.KeyInfo]$key = $($global:host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'))
+      
+    }    
+  }
+}

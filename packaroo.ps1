@@ -141,7 +141,8 @@ $header = builHeader
 $grid = buildGrid
 $footer =  buildFooter
 Write-Host "$header$grid$Footer" -NoNewline
-buildPackages
+$list = buildPackages
+displayPackages($list)
 # Write-Host "gh = $script:gh packs = $pc"
 $global:Host.UI.RawUI.ReadKey() | Out-Null
 
