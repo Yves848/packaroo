@@ -27,6 +27,7 @@ function  buildGrid {
     $grid += $line + " "
     $i++
   }
+  $script:gh = $i
   return $grid
 }
 
@@ -40,11 +41,9 @@ function buildFooter {
   }
   $grid = $line + " "
   $line = $BoxChars["VLine"].PadRight($width-2," ")+$BoxChars["VLine"] 
-  $engines = "    test     "
+  $engines = "    $title     "
   $line = $line.Remove(2,$engines.Length)
-  $engines = "[White][/][Red on White]    test     [/][White][/]"  | Out-SpectreHost
-  # $engines
-  
+  $engines = "[White][/][Red on White]    $title     [/][White][/]"  | Out-SpectreHost
   $line = $line.Insert(2,$engines)
   $grid += $line + " "
   $line = $BoxChars["VLine"].PadRight($width-2," ")+$BoxChars["VLine"] 
@@ -142,7 +141,8 @@ $grid = buildGrid
 $footer =  buildFooter
 Write-Host "$header$grid$Footer" -NoNewline
 $packs = Get-WinGetPackage | where-Object {$_.Source -eq "Winget"}
-# $columns
+$pc = $packs.Count
+Write-Host "gh = $script:gh packs = $pc"
 $global:Host.UI.RawUI.ReadKey() | Out-Null
 
 [Console]::CursorVisible = $cursorVisibility
