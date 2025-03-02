@@ -40,9 +40,11 @@ function buildFooter {
   }
   $grid = $line + " "
   $line = $BoxChars["VLine"].PadRight($width-2," ")+$BoxChars["VLine"] 
-  $engines = Write-SpectreHost "[White][/][Blue on White]    test     [/][White][/]" -PassThru -NoNewline
-  $engines
+  $engines = "    test     "
   $line = $line.Remove(2,$engines.Length)
+  $engines = "[White][/][Red on White]    test     [/][White][/]"  | Out-SpectreHost
+  # $engines
+  
   $line = $line.Insert(2,$engines)
   $grid += $line + " "
   $line = $BoxChars["VLine"].PadRight($width-2," ")+$BoxChars["VLine"] 
@@ -154,7 +156,7 @@ if ($Global:scoop) {
 $header = builHeader
 $grid = buildGrid
 $footer =  buildFooter
-Write-SpectreHost "$header$grid$Footer" -NoNewline -PassThru
+Write-Host "$header$grid$Footer" -NoNewline
 $packs = Get-WinGetPackage | where-Object {$_.Source -eq "Winget"}
 # $columns
 $global:Host.UI.RawUI.ReadKey() | Out-Null
