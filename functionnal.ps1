@@ -2,10 +2,14 @@
 
 function buildPackages {
   $packs = Get-WinGetPackage | Where-Object { $_.Source -eq "Winget" }
-  $lines = New-Object 'System.Collections.Generic.List[Pack]'
+  $lines = New-Object 'System.Collections.Generic.List[GridLine]'
   $packs | ForEach-Object {
     [Pack]$pack = [Pack]::new($_.Name, $_.Id, $_.InstalledVersion, $_.Source, "")
-    $lines.Add($pack)
+    $gridLine = [GridLine]::new()
+    $gridLine.action = 0
+    $gridline.package = $pack
+    $gridLine.selected = $false
+    $lines.Add($gridLine)
   }
   <#
     Collecting scoop data mut be done in another session to avoid screen output.
@@ -27,7 +31,11 @@ function buildPackages {
   $runspace.Dispose()
   $packs | ForEach-Object {
     [Pack]$pack = [Pack]::new($_.Name, $_.Name, $_.version, "Scoop", $_.source)
-    $lines.Add($pack)
+    $gridLine = [GridLine]::new()
+    $gridLine.action = 0
+    $gridline.package = $pack
+    $gridLine.selected = $false
+    $lines.Add($gridLine)
   }
   return $lines
 }
@@ -52,7 +60,8 @@ function drawList {
       $line = "[Blue on White]"+$line+"[/]" | Out-SpectreHost
     }
     [Console]::Write($line)
-    $temp = $todraw[$i] -as [Pack]
+    $gridline = $todraw[$i] -as [GridLine]
+    $temp = $gridline.package
     [Console]::SetCursorPosition($script:columns[1].start, $y)
     if ($temp.name.Length -gt $script:columns[1].width) {
       $temp.name = $temp.name.Substring(0, $script:columns[1].width - 1) + "…"
@@ -75,13 +84,15 @@ function displayPackages {
   $selected = 0;
   $redraw = $true
   while ($true) {
-    $visible = ($list | Select-Object -Skip 0 -First $script:gh)
+    $visible = ($list | Select-Object -Skip $skip -First $script:gh)
     if ($redraw) {
       drawlist -todraw $visible -selected $selected
       $redraw = $false
     }
     if ([console]::KeyAvailable) {
       [System.Management.Automation.Host.KeyInfo]$key = $($global:host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'))
+      if ($key.VirtualKeyCode -eq 32) {
+      }
       if ($key.VirtualKeyCode -eq 27) {
         break 
       }
@@ -89,13 +100,21 @@ function displayPackages {
         # Up
         
         $selected--
+        if ($selected -lt 0) {
+          if ($skip -gt 0) {
+            $skip--
+          }
+          $selected = 0
+        }
         $redraw = $true
-        
       }
       if ($key.VirtualKeyCode -eq 40) {
         # Down
-        
         $selected++
+        if ($selected -eq $script:gh) {
+          $skip++
+          $selected = $selected - 2
+        }
         $redraw = $true
         
       }

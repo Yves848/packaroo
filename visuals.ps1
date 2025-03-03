@@ -32,3 +32,4 @@ $BoxChars = @{
 
 # Affichage de la table
 # $BoxChars
+$checked = "✓"

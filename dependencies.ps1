@@ -42,7 +42,8 @@ class Pack {
   }
 }
 
-class Line {
+class GridLine {
   [bool]$selected
   [Pack]$package
+  [int]$action
 }
