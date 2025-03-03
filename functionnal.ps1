@@ -58,7 +58,7 @@ function drawList {
     
     $gridline = $todraw[$i] -as [GridLine]
     if ($gridline.action -eq 0) {
-      $line = $line.Remove($columns[0].start,1)
+      $line = $line.Remove($columns[0].start,2)
       $line = $line.Insert($columns[0].start,$checked)    
     }
     if ($gridline.action -eq 1) {

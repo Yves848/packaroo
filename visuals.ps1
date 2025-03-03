@@ -32,6 +32,6 @@ $BoxChars = @{
 
 # Affichage de la table
 # $BoxChars
-$checked = "✓"
+$checked = "📌"
 $update = "📦"
 $remove = "♻️"
