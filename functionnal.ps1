@@ -6,7 +6,7 @@ function buildPackages {
   $packs | ForEach-Object {
     [Pack]$pack = [Pack]::new($_.Name, $_.Id, $_.InstalledVersion, $_.Source, "")
     $gridLine = [GridLine]::new()
-    $gridLine.action = 0
+    $gridLine.action = -1
     $gridline.package = $pack
     $gridLine.selected = $false
     $lines.Add($gridLine)
@@ -32,7 +32,7 @@ function buildPackages {
   $packs | ForEach-Object {
     [Pack]$pack = [Pack]::new($_.Name, $_.Name, $_.version, "Scoop", $_.source)
     $gridLine = [GridLine]::new()
-    $gridLine.action = 0
+    $gridLine.action = -1
     $gridline.package = $pack
     $gridLine.selected = $false
     $lines.Add($gridLine)
@@ -61,13 +61,31 @@ function drawList {
     }
     [Console]::Write($line)
     $gridline = $todraw[$i] -as [GridLine]
-    if ($gridline.selected) {
+    if ($gridline.action -eq 0) {
       [Console]::SetCursorPosition($script:columns[0].start, $y)
       if ($i -eq $selected) {
         $out = "[Blue on White]"+$checked+"[/]" | Out-SpectreHost
         [Console]::Write($out)  
       } else {
         [Console]::Write($checked)  
+      }
+    }
+    if ($gridline.action -eq 1) {
+      [Console]::SetCursorPosition($script:columns[0].start, $y)
+      if ($i -eq $selected) {
+        $out = "[Blue on White]"+$update+"[/]" | Out-SpectreHost
+        [Console]::Write($out)  
+      } else {
+        [Console]::Write($update)  
+      }
+    }
+    if ($gridline.action -eq 2) {
+      [Console]::SetCursorPosition($script:columns[0].start, $y)
+      if ($i -eq $selected) {
+        $out = "[Blue on White]"+$remove+"[/]" | Out-SpectreHost
+        [Console]::Write($out)  
+      } else {
+        [Console]::Write($remove)  
       }
     }
     $temp = $gridline.package
@@ -101,7 +119,27 @@ function displayPackages {
     if ([console]::KeyAvailable) {
       [System.Management.Automation.Host.KeyInfo]$key = $($global:host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'))
       if ($key.VirtualKeyCode -eq 32) {
-        ([gridline]$visible[$selected]).selected = -not ([gridline]$visible[$selected]).selected
+        if (([gridline]$visible[$selected]).action -ne 0) {
+          ([gridline]$visible[$selected]).action = 0
+        } else {
+          ([gridline]$visible[$selected]).action = -1
+        }
+        $redraw = $true
+      }
+      if ($key.Character -eq "u") {
+        if (([gridline]$visible[$selected]).action -ne 1) {
+          ([gridline]$visible[$selected]).action = 1
+        } else {
+          ([gridline]$visible[$selected]).action = -1
+        }
+        $redraw = $true
+      }
+      if ($key.Character -eq "d") {
+        if (([gridline]$visible[$selected]).action -ne 2) {
+          ([gridline]$visible[$selected]).action = 2
+        } else {
+          ([gridline]$visible[$selected]).action = -1
+        }
         $redraw = $true
       }
       if ($key.VirtualKeyCode -eq 27) {

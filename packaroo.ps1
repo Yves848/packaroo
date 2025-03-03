@@ -148,3 +148,4 @@ displayPackages($list)
 # $global:Host.UI.RawUI.ReadKey() | Out-Null
 
 [Console]::CursorVisible = $cursorVisibility
+Clear-Host
