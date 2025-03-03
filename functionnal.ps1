@@ -7,7 +7,7 @@ function buildPackages {
     [Pack]$pack = [Pack]::new($_.Name,$_.Id,$_.InstalledVersion,$_.Source,"")
     $lines.Add($pack)
   }
-  $packs = Invoke-Expression -command "scoop list"
+  $packs = Invoke-Expression -command "scoop list" | Out-Null
   $packs | ForEach-Object {
     [Pack]$pack = [Pack]::new($_.Name,$_.Name,$_.version,"Scoop",$_.source)
     $lines.Add($pack)
@@ -26,7 +26,9 @@ function displayPackages{
     $visible = $list | Select-Object -skip 0 -First $script:gh
     if ([console]::KeyAvailable) {
       [System.Management.Automation.Host.KeyInfo]$key = $($global:host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'))
-      
+      if ($key.VirtualKeyCode -eq 27) {
+        break 
+      }
     }    
   }
 }
