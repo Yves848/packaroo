@@ -12,7 +12,7 @@ function buildPackages {
     $lines.Add($gridLine)
   }
   <#
-    Collecting scoop data mut be done in another session to avoid screen output.
+    Collecting scoop data must be done in another session to avoid screen output.
   #>
   $statedata = [System.Collections.Hashtable]::Synchronized([System.Collections.Hashtable]::new())
   $runspace = [runspacefactory]::CreateRunspace()
@@ -89,11 +89,44 @@ function drawList {
       }
     }
     $temp = $gridline.package
+    # Name
     [Console]::SetCursorPosition($script:columns[1].start, $y)
     if ($temp.name.Length -gt $script:columns[1].width) {
       $temp.name = $temp.name.Substring(0, $script:columns[1].width - 1) + "…"
     }
     $out = $temp.name
+    if ($i -eq $selected) {
+      $out = "[Blue on White]"+$out+"[/]" | Out-SpectreHost
+    }
+    [Console]::Write($out)
+    # Id
+    [Console]::SetCursorPosition($script:columns[2].start, $y)
+    if ($temp.Id.Length -gt $script:columns[2].width) {
+      $temp.Id = $temp.Id.Substring(0, $script:columns[2].width - 1) + "…"
+    }
+    $out = $temp.Id
+    if ($i -eq $selected) {
+      $out = "[Blue on White]"+$out+"[/]" | Out-SpectreHost
+    }
+    [Console]::Write($out)
+
+    #Version
+    [Console]::SetCursorPosition($script:columns[3].start, $y)
+    if ($temp.version.Length -gt $script:columns[3].width) {
+      $temp.version = $temp.version.Substring(0, $script:columns[3].width - 1) + "…"
+    }
+    $out = $temp.version
+    if ($i -eq $selected) {
+      $out = "[Blue on White]"+$out+"[/]" | Out-SpectreHost
+    }
+    [Console]::Write($out)
+
+    #Source
+    [Console]::SetCursorPosition($script:columns[4].start, $y)
+    if ($temp.source.Length -gt $script:columns[4].width) {
+      $temp.Source = $temp.Source.Substring(0, $script:columns[4].width - 1) + "…"
+    }
+    $out = $temp.source
     if ($i -eq $selected) {
       $out = "[Blue on White]"+$out+"[/]" | Out-SpectreHost
     }
