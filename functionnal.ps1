@@ -37,12 +37,31 @@ function drawList {
     [System.Object[]]$todraw,
     [int]$selected
   )
-  $i=0
-  $y = $script:listTop+2
-  while($i -lt $todraw.Count) {
+  $i = 0
+  $y = $script:listTop + 2
+  while ($i -lt $todraw.Count) {
+    $line = $BoxChars["VLine"].PadRight($width - 1, " ") + $BoxChars["VLine"] 
+    $c = 1
+    while ($c -lt $script:columns.Count ) {
+      $line = ([string]$line).Remove($script:columns[$c].start - 1, 1)
+      $line = ([string]$line).Insert($script:columns[$c].start - 1, $BoxChars["VLine"])
+      $c++
+    }
+    [Console]::SetCursorPosition(0, $y)
+    if ($i -eq $selected) {
+      $line = "[Blue on White]"+$line+"[/]" | Out-SpectreHost
+    }
+    [Console]::Write($line)
     $temp = $todraw[$i] -as [Pack]
-    [Console]::SetCursorPosition($script:columns[1].start,$y)
-    [Console]::Write($temp.name)
+    [Console]::SetCursorPosition($script:columns[1].start, $y)
+    if ($temp.name.Length -gt $script:columns[1].width) {
+      $temp.name = $temp.name.Substring(0, $script:columns[1].width - 1) + "…"
+    }
+    $out = $temp.name
+    if ($i -eq $selected) {
+      $out = "[Blue on White]"+$out+"[/]" | Out-SpectreHost
+    }
+    [Console]::Write($out)
     $y++
     $i++
   }
@@ -65,6 +84,20 @@ function displayPackages {
       [System.Management.Automation.Host.KeyInfo]$key = $($global:host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'))
       if ($key.VirtualKeyCode -eq 27) {
         break 
+      }
+      if ($key.VirtualKeyCode -eq 38) {
+        # Up
+        
+        $selected--
+        $redraw = $true
+        
+      }
+      if ($key.VirtualKeyCode -eq 40) {
+        # Down
+        
+        $selected++
+        $redraw = $true
+        
       }
     }    
   }
