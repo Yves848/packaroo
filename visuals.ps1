@@ -34,4 +34,4 @@ $BoxChars = @{
 # $BoxChars
 $checked = "✓"
 $update = "📦"
-$remove = "🗑️"
+$remove = "♻️"

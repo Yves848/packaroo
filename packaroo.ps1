@@ -144,8 +144,5 @@ $footer =  buildFooter
 Write-Host "$header$grid$Footer" -NoNewline
 $list = buildPackages 
 displayPackages($list)
-# Write-Host "gh = $script:gh packs = $pc"
-# $global:Host.UI.RawUI.ReadKey() | Out-Null
-
 [Console]::CursorVisible = $cursorVisibility
-Clear-Host
+# Clear-Host

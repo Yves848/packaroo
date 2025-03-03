@@ -55,82 +55,65 @@ function drawList {
       $line = ([string]$line).Insert($script:columns[$c].start - 1, $BoxChars["VLine"])
       $c++
     }
-    [Console]::SetCursorPosition(0, $y)
-    if ($i -eq $selected) {
-      $line = "[Blue on White]"+$line+"[/]" | Out-SpectreHost
-    }
-    [Console]::Write($line)
+    
     $gridline = $todraw[$i] -as [GridLine]
     if ($gridline.action -eq 0) {
-      [Console]::SetCursorPosition($script:columns[0].start, $y)
-      if ($i -eq $selected) {
-        $out = "[Blue on White]"+$checked+"[/]" | Out-SpectreHost
-        [Console]::Write($out)  
-      } else {
-        [Console]::Write($checked)  
-      }
+      $line = $line.Remove($columns[0].start,1)
+      $line = $line.Insert($columns[0].start,$checked)    
     }
     if ($gridline.action -eq 1) {
-      [Console]::SetCursorPosition($script:columns[0].start, $y)
-      if ($i -eq $selected) {
-        $out = "[Blue on White]"+$update+"[/]" | Out-SpectreHost
-        [Console]::Write($out)  
-      } else {
-        [Console]::Write($update)  
-      }
+      $line = $line.Remove($columns[0].start,2)
+      $line = $line.Insert($columns[0].start,$update)
+      
     }
     if ($gridline.action -eq 2) {
-      [Console]::SetCursorPosition($script:columns[0].start, $y)
-      if ($i -eq $selected) {
-        $out = "[Blue on White]"+$remove+"[/]" | Out-SpectreHost
-        [Console]::Write($out)  
-      } else {
-        [Console]::Write($remove)  
-      }
+      $line = $line.Remove($columns[0].start,2)
+      $line = $line.Insert($columns[0].start,$remove) 
     }
+
     $temp = $gridline.package
     # Name
-    [Console]::SetCursorPosition($script:columns[1].start, $y)
     if ($temp.name.Length -gt $script:columns[1].width) {
       $temp.name = $temp.name.Substring(0, $script:columns[1].width - 1) + "…"
     }
     $out = $temp.name
-    if ($i -eq $selected) {
-      $out = "[Blue on White]"+$out+"[/]" | Out-SpectreHost
-    }
-    [Console]::Write($out)
+    $line = $line.Remove($columns[1].start,$out.Length)
+    $line = $line.Insert($columns[1].start,$out)
     # Id
-    [Console]::SetCursorPosition($script:columns[2].start, $y)
     if ($temp.Id.Length -gt $script:columns[2].width) {
       $temp.Id = $temp.Id.Substring(0, $script:columns[2].width - 1) + "…"
     }
     $out = $temp.Id
-    if ($i -eq $selected) {
-      $out = "[Blue on White]"+$out+"[/]" | Out-SpectreHost
-    }
-    [Console]::Write($out)
+    $line = $line.Remove($columns[2].start,$out.Length)
+    $line = $line.Insert($columns[2].start,$out)
+    # [Console]::Write($out)
 
     #Version
-    [Console]::SetCursorPosition($script:columns[3].start, $y)
+    # [Console]::SetCursorPosition($script:columns[3].start, $y)
     if ($temp.version.Length -gt $script:columns[3].width) {
       $temp.version = $temp.version.Substring(0, $script:columns[3].width - 1) + "…"
     }
     $out = $temp.version
-    if ($i -eq $selected) {
-      $out = "[Blue on White]"+$out+"[/]" | Out-SpectreHost
-    }
-    [Console]::Write($out)
+    $line = $line.Remove($columns[3].start,$out.Length)
+    $line = $line.Insert($columns[3].start,$out)
+    # [Console]::Write($out)
 
     #Source
-    [Console]::SetCursorPosition($script:columns[4].start, $y)
+    # [Console]::SetCursorPosition($script:columns[4].start, $y)
     if ($temp.source.Length -gt $script:columns[4].width) {
       $temp.Source = $temp.Source.Substring(0, $script:columns[4].width - 1) + "…"
     }
     $out = $temp.source
+    $line = $line.Remove($columns[4].start,$out.Length)
+    $line = $line.Insert($columns[4].start,$out)
+    # [Console]::Write($out)
+    [Console]::SetCursorPosition(0, $y)
     if ($i -eq $selected) {
-      $out = "[Blue on White]"+$out+"[/]" | Out-SpectreHost
+      $line = $line.Insert(1,"[Blue on White]")
+      $line = $line.Insert($line.Length-1,"[/]")
+      $line = $line | Out-SpectreHost
     }
-    [Console]::Write($out)
+    [Console]::Write($line)
     $y++
     $i++
   }
