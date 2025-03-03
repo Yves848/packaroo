@@ -18,7 +18,8 @@ $height = $global:host.UI.RawUI.BufferSize.Height
 
 $headers = @("","Name","Id","Version","Source")
 $script:gh = 0 # grid height
-
+$script:listTop = 0 # first position of the grid
+$script:columns = New-Object 'System.Collections.Generic.List[PSCustomObject]'
 class Pack {
   [string]$name
   [string]$id

@@ -32,15 +32,35 @@ function buildPackages {
   return $lines
 }
 
+function drawList {
+  param (
+    [System.Object[]]$todraw,
+    [int]$selected
+  )
+  $i=0
+  $y = $script:listTop+2
+  while($i -lt $todraw.Count) {
+    $temp = $todraw[$i] -as [Pack]
+    [Console]::SetCursorPosition($script:columns[1].start,$y)
+    [Console]::Write($temp.name)
+    $y++
+    $i++
+  }
+}
+
 function displayPackages {
   param(
-    [System.Collections.Generic.List[Pack]]$list
+    [System.Object[]]$list
   )
-
   $skip = 0;
   $selected = 0;
+  $redraw = $true
   while ($true) {
-    $visible = $list | Select-Object -Skip 0 -First $script:gh
+    $visible = ($list | Select-Object -Skip 0 -First $script:gh)
+    if ($redraw) {
+      drawlist -todraw $visible -selected $selected
+      $redraw = $false
+    }
     if ([console]::KeyAvailable) {
       [System.Management.Automation.Host.KeyInfo]$key = $($global:host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'))
       if ($key.VirtualKeyCode -eq 27) {
