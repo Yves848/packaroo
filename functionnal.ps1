@@ -61,6 +61,15 @@ function drawList {
     }
     [Console]::Write($line)
     $gridline = $todraw[$i] -as [GridLine]
+    if ($gridline.selected) {
+      [Console]::SetCursorPosition($script:columns[0].start, $y)
+      if ($i -eq $selected) {
+        $out = "[Blue on White]"+$checked+"[/]" | Out-SpectreHost
+        [Console]::Write($out)  
+      } else {
+        [Console]::Write($checked)  
+      }
+    }
     $temp = $gridline.package
     [Console]::SetCursorPosition($script:columns[1].start, $y)
     if ($temp.name.Length -gt $script:columns[1].width) {
@@ -92,6 +101,8 @@ function displayPackages {
     if ([console]::KeyAvailable) {
       [System.Management.Automation.Host.KeyInfo]$key = $($global:host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'))
       if ($key.VirtualKeyCode -eq 32) {
+        ([gridline]$visible[$selected]).selected = -not ([gridline]$visible[$selected]).selected
+        $redraw = $true
       }
       if ($key.VirtualKeyCode -eq 27) {
         break 
