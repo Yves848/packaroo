@@ -123,17 +123,23 @@ function displayPackages {
   param(
     [System.Object[]]$list
   )
+  $SearchMode = $false
   $skip = 0;
   $selected = 0;
   $redraw = $true
   while ($true) {
-    $visible = ($list | Select-Object -Skip $skip -First $script:gh)
+    if ($SearchMode) {
+      
+    } else {
+      $visible = ($list | Select-Object -Skip $skip -First $script:gh)
+    }
     if ($redraw) {
       drawlist -todraw $visible -selected $selected
       $redraw = $false
     }
     if ([console]::KeyAvailable) {
       [System.Management.Automation.Host.KeyInfo]$key = $($global:host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'))
+      if (-not $SearchMode) {
       if ($key.VirtualKeyCode -eq 32) {
         if (([gridline]$visible[$selected]).action -ne 0) {
           ([gridline]$visible[$selected]).action = 0
@@ -183,6 +189,7 @@ function displayPackages {
         $redraw = $true
         
       }
+    }
     }    
   }
 }

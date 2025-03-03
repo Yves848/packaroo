@@ -1,5 +1,5 @@
 # Définition d'une table de caractères pour le dessin de cadres
-$BoxChars = @{
+$Script:BoxChars = @{
     "HLine"  = "─"  # Ligne horizontale simple
     "VLine"  = "│"  # Ligne verticale simple
     "TopLeft" = "╭" # Coin supérieur gauche arrondi
@@ -32,6 +32,6 @@ $BoxChars = @{
 
 # Affichage de la table
 # $BoxChars
-$checked = "📌"
-$update = "📦"
-$remove = "♻️"
+$Script:checked = "📌"
+$Script:update  = "📦"
+$Script:remove  = "♻️"
