@@ -145,4 +145,4 @@ Write-Host "$header$grid$Footer" -NoNewline
 $list = buildPackages 
 displayPackages($list)
 [Console]::CursorVisible = $cursorVisibility
-# Clear-Host
+Clear-Host
