@@ -134,6 +134,7 @@ if ($Global:scoop) {
 } else {
   $title = " Winget "
 }
+
 # Write-SpectreFigletText -Text "Packaroo" -FigletFontPath ".\3d.flf" -Alignment Center -PassThru |  Format-SpectrePanel  -title $title -Border "Rounded" -Color "Magenta1" -Expand 
 # $h2 = $height - [console]::GetCursorPosition().Item2 -2
 
@@ -142,7 +143,7 @@ $header = builHeader
 $grid = buildGrid
 $footer =  buildFooter
 Write-Host "$header$grid$Footer" -NoNewline
-$list = buildPackages 
+$list = buildPackages
 displayPackages($list)
 [Console]::CursorVisible = $cursorVisibility
 Clear-Host
