@@ -59,7 +59,7 @@ function drawList {
     $gridline = $todraw[$i] -as [GridLine]
     if ($gridline.action -eq 0) {
       $line = $line.Remove($columns[0].start,2)
-      $line = $line.Insert($columns[0].start,$checked)    
+      $line = $line.Insert($columns[0].start,$checked)
     }
     if ($gridline.action -eq 1) {
       $line = $line.Remove($columns[0].start,2)
@@ -68,7 +68,7 @@ function drawList {
     }
     if ($gridline.action -eq 2) {
       $line = $line.Remove($columns[0].start,2)
-      $line = $line.Insert($columns[0].start,$remove) 
+      $line = $line.Insert($columns[0].start,$remove)
     }
 
     $temp = $gridline.package
@@ -86,27 +86,23 @@ function drawList {
     $out = $temp.Id
     $line = $line.Remove($columns[2].start,$out.Length)
     $line = $line.Insert($columns[2].start,$out)
-    # [Console]::Write($out)
-
+    
     #Version
-    # [Console]::SetCursorPosition($script:columns[3].start, $y)
     if ($temp.version.Length -gt $script:columns[3].width) {
       $temp.version = $temp.version.Substring(0, $script:columns[3].width - 1) + "…"
     }
     $out = $temp.version
     $line = $line.Remove($columns[3].start,$out.Length)
     $line = $line.Insert($columns[3].start,$out)
-    # [Console]::Write($out)
 
     #Source
-    # [Console]::SetCursorPosition($script:columns[4].start, $y)
     if ($temp.source.Length -gt $script:columns[4].width) {
       $temp.Source = $temp.Source.Substring(0, $script:columns[4].width - 1) + "…"
     }
     $out = $temp.source
     $line = $line.Remove($columns[4].start,$out.Length)
     $line = $line.Insert($columns[4].start,$out)
-    # [Console]::Write($out)
+
     [Console]::SetCursorPosition(0, $y)
     if ($i -eq $selected) {
       $line = $line.Insert(1,"[Blue on White]")
