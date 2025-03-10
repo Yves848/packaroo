@@ -111,17 +111,15 @@ function drawList {
     $line = $line.Insert($columns[4].start,$out)
 
     [Console]::SetCursorPosition(0, $y)
-    if ($i -eq $selected) {
-      if ($temp.majavail) {
-      # $line = $line.Replace("%1","[Yellow]")
-      # $line = $line.Replace("%2","[/]")$columns[0].start+3
-      $line = $line.Insert($columns[0].start+3,"[Yellow]")
-      $line = $line.Insert($columns[0].start+5,"[/]")
-      }
-      $line = $line.Insert(1,"[Blue on White]")
-      $line = $line.Insert($line.Length-1,"[/]")
-      $line = $line | Out-SpectreHost
+    if ($temp.majavail) {
+      $line = $line.Insert($columns[0].start+4,"[/]")
+      $line = $line.Insert($columns[0].start+3,"[Green]")
     }
+    if ($i -eq $selected) {
+      $line = $line.Insert(1,"[White on Blue]")
+      $line = $line.Insert($line.Length-1,"[/]")
+    }
+    $line = $line | Out-SpectreHost
     [Console]::Write($line)
     $y++
     $i++

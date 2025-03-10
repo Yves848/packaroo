@@ -10,7 +10,8 @@ $cursorVisibility = [console]::CursorVisible
 
 $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding
 
-
+. ./system.ps1
+maximize
 . ./dependencies.ps1
 . ./visuals.ps1
 . ./functionnal.ps1
@@ -57,7 +58,7 @@ function buildFooter {
 function buildColumns {
   $ratio = [Math]::Round(($width)/128,3)
   # Column creation & size adaptation using the above ratio
-  $c0 = 4
+  $c0 = 5
   $c1 = [Math]::Round(52*$ratio)
   $c2 = [Math]::Round(34*$ratio)
   $c3 = [Math]::Round(22*$ratio)
@@ -146,4 +147,5 @@ Write-Host "$header$grid$Footer" -NoNewline
 $list = buildPackages
 displayPackages($list)
 [Console]::CursorVisible = $cursorVisibility
+restore
 Clear-Host
