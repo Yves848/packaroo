@@ -16,7 +16,7 @@ Import-Module PwshSpectreConsole
 $Script:width = $global:host.UI.RawUI.BufferSize.Width
 $Script:height = $global:host.UI.RawUI.BufferSize.Height
 
-$Script:headers = @("","Name","Id","Version","Source")
+$Script:headers = @("", "Name", "Id", "Version", "Source")
 $script:gh = 0 # grid height
 $script:listTop = 0 # first position of the grid
 $script:columns = New-Object 'System.Collections.Generic.List[PSCustomObject]'
@@ -26,6 +26,7 @@ class Pack {
   [string]$version
   [string]$source
   [string]$scoopsource
+  [bool]$majavail
 
   Pack(
     [string]$Name,
@@ -39,6 +40,7 @@ class Pack {
     $this.source = $source
     $this.version = $version
     $this.scoopsource = $scoopsource
+    $this.majavail = $false
   }
 }
 

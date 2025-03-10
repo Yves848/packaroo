@@ -5,6 +5,9 @@ function buildPackages {
   $lines = New-Object 'System.Collections.Generic.List[GridLine]'
   $packs | ForEach-Object {
     [Pack]$pack = [Pack]::new($_.Name, $_.Id, $_.InstalledVersion, $_.Source, "")
+    if ($_.IsUpdateAvailable -eq $true) {
+      $pack.majavail = $true
+    }
     $gridLine = [GridLine]::new()
     $gridLine.action = -1
     $gridline.package = $pack
@@ -72,6 +75,10 @@ function drawList {
     }
 
     $temp = $gridline.package
+    if ($temp.majavail -eq $true) {
+      $line = $line.Remove($columns[0].start+3,1)
+      $line = $line.Insert($columns[0].start+3,$Script:updateAvailable)
+    }
     # Name
     if ($temp.name.Length -gt $script:columns[1].width) {
       $temp.name = $temp.name.Substring(0, $script:columns[1].width - 1) + "…"
@@ -105,6 +112,12 @@ function drawList {
 
     [Console]::SetCursorPosition(0, $y)
     if ($i -eq $selected) {
+      if ($temp.majavail) {
+      # $line = $line.Replace("%1","[Yellow]")
+      # $line = $line.Replace("%2","[/]")$columns[0].start+3
+      $line = $line.Insert($columns[0].start+3,"[Yellow]")
+      $line = $line.Insert($columns[0].start+5,"[/]")
+      }
       $line = $line.Insert(1,"[Blue on White]")
       $line = $line.Insert($line.Length-1,"[/]")
       $line = $line | Out-SpectreHost
