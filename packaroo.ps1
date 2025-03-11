@@ -144,7 +144,9 @@ $header = builHeader
 $grid = buildGrid
 $footer =  buildFooter
 Write-Host "$header$grid$Footer" -NoNewline
-$list = buildPackages
+
+  $Script:list = buildPackages
+
 displayPackages($list)
 [Console]::CursorVisible = $cursorVisibility
 restore

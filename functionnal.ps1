@@ -126,6 +126,14 @@ function drawList {
   }
 }
 
+function drawPopup {
+  $popup = "test" | Format-SpectrePadded -Padding 1 | Format-SpectrePanel -Width 25 -Header "Essai" -Border "Rounded" -Color "SlateBlue3" | Out-SpectreHost
+  [System.Console]::SetCursorPosition(20,20)
+  [System.Console]::Write($popup)
+  
+  $global:host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+}
+
 function displayPackages {
   param(
     [System.Object[]]$list
@@ -153,6 +161,7 @@ function displayPackages {
         } else {
           ([gridline]$visible[$selected]).action = -1
         }
+        $key.VirtualKeyCode = 40
         $redraw = $true
       }
       if ($key.Character -eq "u") {
@@ -161,7 +170,13 @@ function displayPackages {
         } else {
           ([gridline]$visible[$selected]).action = -1
         }
+        $key.VirtualKeyCode = 40
         $redraw = $true
+      }
+      if ($key.Character -eq "p") {
+        $content = "coucou" | Format-SpectrePadded -Padding 1 | Format-SpectrePanel | Out-SpectreHost
+       renderVisual -y 10 -x 10 -content $content
+       Start-Sleep -Seconds 5
       }
       if ($key.Character -eq "d") {
         if (([gridline]$visible[$selected]).action -ne 2) {
@@ -169,6 +184,7 @@ function displayPackages {
         } else {
           ([gridline]$visible[$selected]).action = -1
         }
+        $key.VirtualKeyCode = 40
         $redraw = $true
       }
       if ($key.VirtualKeyCode -eq 27) {

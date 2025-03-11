@@ -26,5 +26,3 @@ function restore {
   $hWnd = [WinAPI]::GetForegroundWindow()
   [WinAPI]::ShowWindow($hWnd, $SW_RESTORE)
 }
-
-

@@ -36,3 +36,18 @@ $Script:checked = "📌"
 $Script:update = "📦"
 $Script:remove = "♻️"
 $Script:updateAvailable = ""
+
+function renderVisual {
+    param (
+        [int]$y,
+        [int]$x,
+        [string]$content
+    )
+    [console]::SetCursorPosition($y, $x)
+    [console]::Write($content)
+    # $content.Split("`n").ForEach({
+    #         [console]::SetCursorPosition($y, $x)
+    #         [console]::Write($_)
+    #         $y++
+    #     })
+}
