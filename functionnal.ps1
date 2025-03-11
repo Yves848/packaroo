@@ -175,8 +175,12 @@ function displayPackages {
       }
       if ($key.Character -eq "p") {
         # $content = "[Red]coucou[/]" | Format-SpectrePadded -Padding 1 | Format-SpectrePanel | Out-SpectreHost
-        $content = "Test :call_me_hand:" | Format-SpectrePanel -Border "Rounded" -Width 80| Out-SpectreHost
-       renderVisual -y $selected -x 0 -content $content
+        $content = "Infos : " | Format-SpectrePanel -Border "Rounded" -Width 80| Out-SpectreHost
+        $y = $selected
+        if ($selected -lt 4) {
+          $y = $selected + 4
+        }
+       renderVisual -y $y -x 2 -content $content
       }
       if ($key.Character -eq "d") {
         if (([gridline]$visible[$selected]).action -ne 2) {

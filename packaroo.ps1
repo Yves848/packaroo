@@ -7,6 +7,11 @@ Import-Module PwshSpectreConsole
 Import-Module Microsoft.WinGet.Client
 Import-Module pscandy
 $cursorVisibility = [console]::CursorVisible
+Set-PSReadLineKeyHandler -Chord 'Ctrl+C' -ScriptBlock { }
+Set-PSReadLineKeyHandler -Chord 'Escape' -ScriptBlock {
+  [Microsoft.PowerShell.PSConsoleReadLine]::RevertLine()
+}
+
 [console]::CursorVisible = $false
 
 $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding
@@ -154,5 +159,7 @@ Write-Host "$header$grid$Footer" -NoNewline
 displayPackages($list)
 Write-Host "$header$grid$Footer" -NoNewline 
 [Console]::CursorVisible = $cursorVisibility
+Set-PSReadLineKeyHandler -Chord 'Ctrl+C' -Function CancelLine
+
 restore
 Clear-Host
