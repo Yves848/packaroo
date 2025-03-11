@@ -142,9 +142,11 @@ function displayPackages {
   $skip = 0;
   $selected = 0;
   $redraw = $true
+  [string]$search = ""
   while ($true) {
     if ($SearchMode) {
-      
+      $content = "Search : $search" | Format-SpectrePanel -Width 30 | Out-SpectreHost
+      renderVisual -x ($width - 33) -y ($height-3) -content $content
     } else {
       $visible = ($list | Select-Object -Skip $skip -First $script:gh)
     }
@@ -175,7 +177,7 @@ function displayPackages {
       }
       if ($key.Character -eq "p") {
         # $content = "[Red]coucou[/]" | Format-SpectrePadded -Padding 1 | Format-SpectrePanel | Out-SpectreHost
-        $content = "Infos : " | Format-SpectrePanel -Border "Rounded" -Width 80| Out-SpectreHost
+        $content = @("$search") | Foreach-Object { $_ | Format-SpectrePanel -Width 30 } | Format-SpectreColumns | Out-SpectreHost
         $y = $selected
         if ($selected -lt 4) {
           $y = $selected + 4
@@ -193,6 +195,11 @@ function displayPackages {
       }
       if ($key.VirtualKeyCode -eq 27) {
         break 
+      }
+      if ($key.VirtualKeyCode -eq 191) {
+        if ($key.ControlKeyState -match "ShiftPressed") {
+          $SearchMode = -not $SearchMode
+        }
       }
       if ($key.VirtualKeyCode -eq 38) {
         # Up
@@ -216,7 +223,20 @@ function displayPackages {
         $redraw = $true
         
       }
-    }
+     } else {
+      if ($key.VirtualKeyCode -ge 65 -and $key.VirtualKeyCode -le 90) {
+        $search += $key.Character
+      }
+      
+      if ($key.VirtualKeyCode -eq 8) {
+        $search = $search.Remove($search.Length-1,1)
+      }
+      if ($key.VirtualKeyCode -eq 191) {
+        if ($key.ControlKeyState -match "ShiftPressed") {
+          $SearchMode = -not $SearchMode
+        }
+      }
+     }
     }    
   }
 }
