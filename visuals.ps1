@@ -43,11 +43,9 @@ function renderVisual {
         [int]$x,
         [string]$content
     )
-    [console]::SetCursorPosition($y, $x)
-    [console]::Write($content)
-    # $content.Split("`n").ForEach({
-    #         [console]::SetCursorPosition($y, $x)
-    #         [console]::Write($_)
-    #         $y++
-    #     })
+    $content -Split "`r`n" | ForEach-Object {
+        [console]::SetCursorPosition($x, $y)
+        [Console]::Write($_)
+        $y++
+    }
 }

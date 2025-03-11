@@ -174,9 +174,9 @@ function displayPackages {
         $redraw = $true
       }
       if ($key.Character -eq "p") {
-        $content = "coucou" | Format-SpectrePadded -Padding 1 | Format-SpectrePanel | Out-SpectreHost
-       renderVisual -y 10 -x 10 -content $content
-       Start-Sleep -Seconds 5
+        # $content = "[Red]coucou[/]" | Format-SpectrePadded -Padding 1 | Format-SpectrePanel | Out-SpectreHost
+        $content = "Test :call_me_hand:" | Format-SpectrePanel -Border "Rounded" -Width 80| Out-SpectreHost
+       renderVisual -y $selected -x 0 -content $content
       }
       if ($key.Character -eq "d") {
         if (([gridline]$visible[$selected]).action -ne 2) {

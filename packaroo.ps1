@@ -5,6 +5,7 @@ param(
 
 Import-Module PwshSpectreConsole
 Import-Module Microsoft.WinGet.Client
+Import-Module pscandy
 $cursorVisibility = [console]::CursorVisible
 [console]::CursorVisible = $false
 
@@ -144,10 +145,14 @@ $header = builHeader
 $grid = buildGrid
 $footer =  buildFooter
 Write-Host "$header$grid$Footer" -NoNewline
-
-  $Script:list = buildPackages
-
+$Spinner = [Spinner]::new("Dots",3,$height-2)
+$Spinner.Start("Loading Packages List")
+$Script:list = buildPackages
+$Spinner.Stop()
+[system.console]::SetCursorPosition(0,0)
+Write-Host "$header$grid$Footer" -NoNewline
 displayPackages($list)
+Write-Host "$header$grid$Footer" -NoNewline 
 [Console]::CursorVisible = $cursorVisibility
 restore
 Clear-Host
