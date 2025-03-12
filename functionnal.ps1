@@ -60,9 +60,9 @@ function drawList {
     }
     
     $gridline = $todraw[$i] -as [GridLine]
-    if ($gridline.action -eq 0) {
-      $line = $line.Remove($columns[0].start,2)
-      $line = $line.Insert($columns[0].start,$checked)
+    if ($gridline.selected) {
+      $line = $line.Remove(0,1)
+      $line = $line.Insert(0,$checked)
     }
     if ($gridline.action -eq 1) {
       $line = $line.Remove($columns[0].start,2)
@@ -119,6 +119,10 @@ function drawList {
       $line = $line.Insert(1,"[White on Blue]")
       $line = $line.Insert($line.Length-1,"[/]")
     }
+    if ($gridline.selected) {
+      $line = $line.Insert(1,"[/]")
+      $line = $line.Insert(0,"[Green]")
+    }
     $line = $line | Out-SpectreHost
     [Console]::Write($line)
     $y++
@@ -158,11 +162,8 @@ function displayPackages {
       [System.Management.Automation.Host.KeyInfo]$key = $($global:host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'))
       if (-not $SearchMode) {
       if ($key.VirtualKeyCode -eq 32) {
-        if (([gridline]$visible[$selected]).action -ne 0) {
-          ([gridline]$visible[$selected]).action = 0
-        } else {
-          ([gridline]$visible[$selected]).action = -1
-        }
+        ([gridline]$visible[$selected]).selected = -not ([gridline]$visible[$selected]).selected
+        
         $key.VirtualKeyCode = 40
         $redraw = $true
       }
@@ -214,12 +215,15 @@ function displayPackages {
       }
       if ($key.VirtualKeyCode -eq 40) {
         # Down
+        if (($skip + $Script:gh) -lt $list.Count) {
         $selected++
         if ($selected -eq $script:gh) {
           $skip++
-          $selected = $selected - 2
+          # $selected = $selected - 2
+          $selected = $script:gh - 1
         }
         $redraw = $true
+      }
         
       }
      } else {
