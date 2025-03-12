@@ -46,7 +46,8 @@ function buildPackages {
 function drawList {
   param (
     [System.Object[]]$todraw,
-    [int]$selected
+    [int]$selected,
+    [string]$search = ""
   )
   $i = 0
   $y = $script:listTop + 2
@@ -123,7 +124,18 @@ function drawList {
       $line = $line.Insert(1,"[/]")
       $line = $line.Insert(0,"[Green]")
     }
+    
     $line = $line | Out-SpectreHost
+    if ($search -ne "") {
+      # TODO: Search All Matches
+      # Attention : Go from the last to the first
+      $match = [regex]::Match($line,$search)
+      if ($match.Success) {
+        $line = $line.insert($match.Index+$match.Length,"[/]")
+        $line = $line.insert($match.Index,"[white on blue underline]") 
+      }
+      $line = $line | Out-SpectreHost
+    }
     [Console]::Write($line)
     $y++
     $i++
@@ -155,7 +167,7 @@ function displayPackages {
       $visible = ($list | Select-Object -Skip $skip -First $script:gh)
     }
     if ($redraw) {
-      drawlist -todraw $visible -selected $selected
+      drawlist -todraw $visible -selected $selected -search $search
       $redraw = $false
     }
     if ([console]::KeyAvailable) {
@@ -215,25 +227,29 @@ function displayPackages {
       }
       if ($key.VirtualKeyCode -eq 40) {
         # Down
-        if (($skip + $Script:gh) -lt $list.Count) {
+        
         $selected++
         if ($selected -eq $script:gh) {
+          if (($skip + $Script:gh) -lt $list.Count) {
           $skip++
+          }
           # $selected = $selected - 2
           $selected = $script:gh - 1
         }
         $redraw = $true
-      }
+      
         
       }
      } else {
       if ($key.VirtualKeyCode -ge 65 -and $key.VirtualKeyCode -le 90) {
         $search += $key.Character
+        $redraw = $true
       }
       
       if ($key.VirtualKeyCode -eq 8) {
         if ($search.Length -gt 0) {
           $search = $search.Remove($search.Length-1,1)
+          $redraw = $true
         }
       }
       if ($key.VirtualKeyCode -eq 191) {
