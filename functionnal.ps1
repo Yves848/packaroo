@@ -54,6 +54,7 @@ function drawList {
   while ($i -lt $todraw.Count) {
     $line = $BoxChars["VLine"].PadRight($width - 1, " ") + $BoxChars["VLine"] 
     $c = 1
+    
     while ($c -lt $script:columns.Count ) {
       $line = ([string]$line).Remove($script:columns[$c].start - 1, 1)
       $line = ([string]$line).Insert($script:columns[$c].start - 1, $BoxChars["VLine"])
@@ -113,29 +114,35 @@ function drawList {
 
     [Console]::SetCursorPosition(0, $y)
     if ($temp.majavail) {
-      $line = $line.Insert($columns[0].start+4,"[/]")
-      $line = $line.Insert($columns[0].start+3,"[Green]")
+      $line = $line.Insert($columns[0].start+4,"</Green>")
+      $line = $line.Insert($columns[0].start+3,"<Green>")
     }
+    $back = "[0]"
+    $backClose = "[/0]"
     if ($i -eq $selected) {
-      $line = $line.Insert(1,"[White on Blue]")
-      $line = $line.Insert($line.Length-1,"[/]")
+      $line = $line.Insert(1,"<15>[27]")
+      $line = $line.Insert($line.Length-1,"</15>[/27]")
+      $back = "[27]"
+      $backClose = "[/27]"
     }
     if ($gridline.selected) {
-      $line = $line.Insert(1,"[/]")
-      $line = $line.Insert(0,"[Green]")
+      $line = $line.Insert(1,"</40>")
+      $line = $line.Insert(0,"<40>")
     }
     
-    $line = $line | Out-SpectreHost
+    # $line = $line | Out-SpectreHost
+    $line = Build-Candy  $line
     if ($search -ne "") {
       # TODO: Search All Matches
       # Attention : Go from the last to the first
       $match = [regex]::Match($line,$search)
       if ($match.Success) {
-        $line = $line.insert($match.Index+$match.Length,"[/]")
-        $line = $line.insert($match.Index,"[white on blue underline]") 
+        $line = $line.insert($match.Index+$match.Length,"[/Red]</U>$($back)")
+        $line = $line.insert($match.Index,"[Red]<U>") 
+        $line = $line.Insert($line.Length-1,"$($backclose)")
       }
-      $line = $line | Out-SpectreHost
     }
+    $line = Build-Candy  $line 
     [Console]::Write($line)
     $y++
     $i++
