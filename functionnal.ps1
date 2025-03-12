@@ -146,7 +146,7 @@ function displayPackages {
   while ($true) {
     if ($SearchMode) {
       $content = "Search : $search" | Format-SpectrePanel -Width 30 | Out-SpectreHost
-      renderVisual -x ($width - 33) -y ($height-3) -content $content
+      renderVisual -x ($width - 33) -y ($height-4) -content $content
     } else {
       $visible = ($list | Select-Object -Skip $skip -First $script:gh)
     }
@@ -176,7 +176,6 @@ function displayPackages {
         $redraw = $true
       }
       if ($key.Character -eq "p") {
-        # $content = "[Red]coucou[/]" | Format-SpectrePadded -Padding 1 | Format-SpectrePanel | Out-SpectreHost
         $content = @("$search") | Foreach-Object { $_ | Format-SpectrePanel -Width 30 } | Format-SpectreColumns | Out-SpectreHost
         $y = $selected
         if ($selected -lt 4) {
@@ -229,12 +228,17 @@ function displayPackages {
       }
       
       if ($key.VirtualKeyCode -eq 8) {
-        $search = $search.Remove($search.Length-1,1)
+        if ($search.Length -gt 0) {
+          $search = $search.Remove($search.Length-1,1)
+        }
       }
       if ($key.VirtualKeyCode -eq 191) {
         if ($key.ControlKeyState -match "ShiftPressed") {
           $SearchMode = -not $SearchMode
         }
+        [console]::SetCursorPosition(0,$height -5)
+        Write-Host "$Footer" -NoNewline
+        $redraw = $true
       }
      }
     }    

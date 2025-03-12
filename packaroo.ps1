@@ -31,7 +31,7 @@ function  buildGrid {
     $i++
   }
   $i = 0
-  while ($i -lt $height - 7) {
+  while ($i -lt $height - 8) {
     $grid += $line
     $i++
   }
@@ -55,6 +55,7 @@ function buildFooter {
   $line = $line.Insert(2,$engines)
   $grid += $line
   $line = $BoxChars["VLine"].PadRight($width-1," ")+$BoxChars["VLine"] 
+  $grid += $line 
   $grid += $line 
   $line = $BoxChars["BottomLeft"].PadRight($width-1,$BoxChars["HLine"])+$BoxChars["BottomRight"] 
   $grid += $line 
