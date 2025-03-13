@@ -185,7 +185,6 @@ function displayPackages {
       if ($key.VirtualKeyCode -eq 32) {
         # Space
         ([gridline]$visible[$selected]).selected = -not ([gridline]$visible[$selected]).selected
-        
         $key.VirtualKeyCode = 40
         $redraw = $true
       }
@@ -227,7 +226,6 @@ function displayPackages {
           [console]::SetCursorPosition(0,$height -5)
           Write-Host "$Footer" -NoNewline
         } else {
-
           break 
         }
       }
@@ -243,7 +241,6 @@ function displayPackages {
       }
       if ($key.VirtualKeyCode -eq 38) {
         # Up
-        
         $selected--
         if ($selected -lt 0) {
           if ($skip -gt 0) {
@@ -255,7 +252,6 @@ function displayPackages {
       }
       if ($key.VirtualKeyCode -eq 40) {
         # Down
-        
         $selected++
         if ($selected -eq $script:gh) {
           if (($skip + $Script:gh) -lt $list.Count) {
@@ -272,15 +268,12 @@ function displayPackages {
         $search += $key.Character
         $redraw = $true
       }
-      
       if ($searchmode -and $key.VirtualKeyCode -eq 8) {
         if ($search.Length -gt 0) {
           $search = $search.Remove($search.Length-1,1)
           $redraw = $true
         }
       }
-      
-    #  }
-    }    
+    }
   }
 }
