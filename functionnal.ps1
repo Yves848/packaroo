@@ -168,25 +168,29 @@ function displayPackages {
   [string]$search = ""
   while ($true) {
     if ($SearchMode) {
-      $content = "Search : $search" | Format-SpectrePanel -Width 30 | Out-SpectreHost
-      renderVisual -x ($width - 33) -y ($height-4) -content $content
+      $content = "[underline]Search : $($search.PadRight(30," "))[/]" | Format-SpectrePanel -Width 40 -Border "None" | Out-SpectreHost
+      renderVisual -x ($width - 42) -y ($height-4) -content $content
     } else {
       $visible = ($list | Select-Object -Skip $skip -First $script:gh)
     }
+
     if ($redraw) {
       drawlist -todraw $visible -selected $selected -search $search
       $redraw = $false
     }
+
     if ([console]::KeyAvailable) {
       [System.Management.Automation.Host.KeyInfo]$key = $($global:host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'))
-      if (-not $SearchMode) {
+      # if (-not $SearchMode) {
       if ($key.VirtualKeyCode -eq 32) {
+        # Space
         ([gridline]$visible[$selected]).selected = -not ([gridline]$visible[$selected]).selected
         
         $key.VirtualKeyCode = 40
         $redraw = $true
       }
-      if ($key.Character -eq "u") {
+      if (-not $searchmode -and $key.Character -eq "u") {
+        # U
         if (([gridline]$visible[$selected]).action -ne 1) {
           ([gridline]$visible[$selected]).action = 1
         } else {
@@ -195,15 +199,17 @@ function displayPackages {
         $key.VirtualKeyCode = 40
         $redraw = $true
       }
-      if ($key.Character -eq "p") {
+      if (-not $searchmode -and $key.Character -eq "p") {
+        # P
         $content = @("$search") | Foreach-Object { $_ | Format-SpectrePanel -Width 30 } | Format-SpectreColumns | Out-SpectreHost
         $y = $selected
         if ($selected -lt 4) {
           $y = $selected + 4
         }
-       renderVisual -y $y -x 2 -content $content
+        renderVisual -y $y -x 2 -content $content
       }
-      if ($key.Character -eq "d") {
+      if (-not $searchmode -and $key.Character -eq "d") {
+        # D
         if (([gridline]$visible[$selected]).action -ne 2) {
           ([gridline]$visible[$selected]).action = 2
         } else {
@@ -213,11 +219,26 @@ function displayPackages {
         $redraw = $true
       }
       if ($key.VirtualKeyCode -eq 27) {
-        break 
+        # Esc
+        if ($searchmode) {
+          $SearchMode = $false
+          $search = ""
+          $redraw = $true
+          [console]::SetCursorPosition(0,$height -5)
+          Write-Host "$Footer" -NoNewline
+        } else {
+
+          break 
+        }
       }
       if ($key.VirtualKeyCode -eq 191) {
         if ($key.ControlKeyState -match "ShiftPressed") {
           $SearchMode = -not $SearchMode
+          if (-not $SearchMode) {
+            [console]::SetCursorPosition(0,$height -5)
+            Write-Host "$Footer" -NoNewline
+          }
+          $redraw = $true
         }
       }
       if ($key.VirtualKeyCode -eq 38) {
@@ -244,30 +265,22 @@ function displayPackages {
           $selected = $script:gh - 1
         }
         $redraw = $true
-      
-        
+
       }
-     } else {
-      if ($key.VirtualKeyCode -ge 65 -and $key.VirtualKeyCode -le 90) {
+      # } else {
+      if ($searchmode -and $key.VirtualKeyCode -ge 65 -and $key.VirtualKeyCode -le 90) {
         $search += $key.Character
         $redraw = $true
       }
       
-      if ($key.VirtualKeyCode -eq 8) {
+      if ($searchmode -and $key.VirtualKeyCode -eq 8) {
         if ($search.Length -gt 0) {
           $search = $search.Remove($search.Length-1,1)
           $redraw = $true
         }
       }
-      if ($key.VirtualKeyCode -eq 191) {
-        if ($key.ControlKeyState -match "ShiftPressed") {
-          $SearchMode = -not $SearchMode
-        }
-        [console]::SetCursorPosition(0,$height -5)
-        Write-Host "$Footer" -NoNewline
-        $redraw = $true
-      }
-     }
+      
+    #  }
     }    
   }
 }

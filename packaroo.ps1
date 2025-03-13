@@ -17,7 +17,7 @@ Set-PSReadLineKeyHandler -Chord 'Escape' -ScriptBlock {
 $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding
 
 . ./system.ps1
-maximize
+# maximize
 . ./dependencies.ps1
 . ./visuals.ps1
 . ./functionnal.ps1
@@ -162,5 +162,5 @@ Write-Host "$header$grid$Footer" -NoNewline
 [Console]::CursorVisible = $cursorVisibility
 Set-PSReadLineKeyHandler -Chord 'Ctrl+C' -Function CancelLine
 
-restore
+# restore
 Clear-Host
