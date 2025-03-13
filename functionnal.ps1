@@ -117,12 +117,10 @@ function drawList {
       $line = $line.Insert($columns[0].start+4,"</Green>")
       $line = $line.Insert($columns[0].start+3,"<Green>")
     }
-    $back = "[0]"
     $backClose = "0"
     if ($i -eq $selected) {
       $line = $line.Insert(1,"<15>[27]")
       $line = $line.Insert($line.Length-1,"</15>[/27]")
-      $back = "[27]"
       $backClose = "27"
     }
     if ($gridline.selected) {
@@ -130,11 +128,7 @@ function drawList {
       $line = $line.Insert(0,"<40>")
     }
     
-    # $line = $line | Out-SpectreHost
-    # $line = Build-Candy  $line
     if ($search -ne "") {
-      # TODO: Search All Matches
-      # Attention : Go from the last to the first
       $line = $line.Replace($search, "`e[48;5;124m$($search)`e[48;5;$($backClose)m")
     }
     $line = Build-Candy  $line 
