@@ -131,15 +131,20 @@ function drawList {
     }
     
     # $line = $line | Out-SpectreHost
-    $line = Build-Candy  $line
+    # $line = Build-Candy  $line
     if ($search -ne "") {
       # TODO: Search All Matches
       # Attention : Go from the last to the first
-      $match = [regex]::Match($line,$search)
-      if ($match.Success) {
-        $line = $line.insert($match.Index+$match.Length,"[/Red]</U>$($back)")
-        $line = $line.insert($match.Index,"[Red]<U>") 
-        $line = $line.Insert($line.Length-1,"$($backclose)")
+      $matches = [regex]::Matches($line,$search)
+      if ($matches.Count -gt 0) {
+        $m = $matches.Count -1
+        while ($m -ge 0) {
+          $match = $matches[$m]
+          $line = $line.insert($match.Index+$match.Length,"[/Red]</U>$($back)")
+          $line = $line.insert($match.Index,"[Red]<U>") 
+          $line = $line.Insert($line.Length-1,"$($backclose)")
+          $m--
+        }
       }
     }
     $line = Build-Candy  $line 
