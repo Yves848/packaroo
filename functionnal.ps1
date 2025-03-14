@@ -154,14 +154,21 @@ function displayPackages {
   $skip = 0;
   $selected = 0;
   $redraw = $true
+  $filter = $false
   [string]$search = ""
   while ($true) {
     if ($SearchMode) {
       $content = "[underline]Search : $($search.PadRight(30," "))[/]" | Format-SpectrePanel -Width 40 -Border "None" | Out-SpectreHost
       renderVisual -x ($width - 42) -y ($height-4) -content $content
-    } else {
-      $visible = ($list | Select-Object -Skip $skip -First $script:gh)
     }
+
+    if ($filter) {
+      $visible = $list | Where-Object {(([pack]$_.package).Name -match $search) -or (([pack]$_.package).Id -match $search)}
+    } else {
+      $visible = $list
+    }
+
+    $visible = ($visible | Select-Object -Skip $skip -First $script:gh)
 
     if ($redraw) {
       drawlist -todraw $visible -selected $selected -search $search
@@ -250,17 +257,25 @@ function displayPackages {
           $selected = $script:gh - 1
         }
         $redraw = $true
+      }
 
-      }
-      # } else {
-      if ($searchmode -and $key.VirtualKeyCode -ge 65 -and $key.VirtualKeyCode -le 90) {
-        $search += $key.Character
-        $redraw = $true
-      }
-      if ($searchmode -and $key.VirtualKeyCode -eq 8) {
-        if ($search.Length -gt 0) {
-          $search = $search.Remove($search.Length-1,1)
+      if ($key.VirtualKeyCode -eq 70) {
+        if ($key.ControlKeyState -match "LeftCtrlPressed") {
           $redraw = $true
+          $filter = -not $filter
+        }
+      }
+      
+      if (($key.ControlKeyState -eq "") -or ($key.ControlKeyState -match "ShiftPressed")) {
+        if ($searchmode -and $key.VirtualKeyCode -ge 65 -and $key.VirtualKeyCode -le 90) {
+          $search += $key.Character
+          $redraw = $true
+        }
+        if ($searchmode -and $key.VirtualKeyCode -eq 8) {
+          if ($search.Length -gt 0) {
+            $search = $search.Remove($search.Length-1,1)
+            $redraw = $true
+          }
         }
       }
     }
