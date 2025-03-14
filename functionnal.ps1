@@ -177,7 +177,6 @@ function displayPackages {
 
     if ([console]::KeyAvailable) {
       [System.Management.Automation.Host.KeyInfo]$key = $($global:host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown'))
-      # if (-not $SearchMode) {
       if ($key.VirtualKeyCode -eq 32) {
         # Space
         ([gridline]$visible[$selected]).selected = -not ([gridline]$visible[$selected]).selected
@@ -265,7 +264,7 @@ function displayPackages {
           $filter = -not $filter
         }
       }
-      
+
       if (($key.ControlKeyState -eq "") -or ($key.ControlKeyState -match "ShiftPressed")) {
         if ($searchmode -and $key.VirtualKeyCode -ge 65 -and $key.VirtualKeyCode -le 90) {
           $search += $key.Character
