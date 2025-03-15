@@ -234,9 +234,12 @@ function displayPackages {
         }
       }
       if ($key.VirtualKeyCode -eq 188) {
-        [Modal]$modal = [Modal]::new(@{X = 10; Y = 10}, 60,5,"","")
-        $modal.Center()
-        $modal.ShowModal()
+        if ($key.ControlKeyState -match "ShiftPressed") {
+          [Modal]$modal = [Modal]::new(@{X = 10; Y = 10}, 60,5,"","")
+          $modal.Center()
+          $modal.ShowModal()
+          $modal.print(0,0,"Print Test")
+        }
       }
       if ($key.VirtualKeyCode -eq 38) {
         # Up

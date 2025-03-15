@@ -80,7 +80,10 @@ class Modal {
         renderVisual -y $this.tl.y -x $this.TL.x -content $content
     }
 
-    print() {
-        
+    print([int]$x, [int]$y, [string]$text) {
+        $x1 = ($this.tl.x+1)+$x
+        $y1 = ($this.tl.y+1)+$y
+        [console]::SetCursorPosition($x1,$y1)
+        [console]::Write("$($text) ## $($x1) $($y1)")
     }
 }
