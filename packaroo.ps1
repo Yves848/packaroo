@@ -63,7 +63,7 @@ function buildFooter {
 }
 
 function buildColumns {
-  $ratio = [Math]::Round(($width)/128,3)
+  $ratio = [Math]::Round(($width)/129,3)
   # Column creation & size adaptation using the above ratio
   $c0 = 5
   $c1 = [Math]::Round(52*$ratio)
@@ -142,7 +142,6 @@ if ($Global:scoop) {
 } else {
   $title = " Winget "
 }
-
 # Write-SpectreFigletText -Text "Packaroo" -FigletFontPath ".\3d.flf" -Alignment Center -PassThru |  Format-SpectrePanel  -title $title -Border "Rounded" -Color "Magenta1" -Expand 
 # $h2 = $height - [console]::GetCursorPosition().Item2 -2
 
@@ -156,9 +155,10 @@ $Spinner.Start("Loading Packages List")
 $Script:list = buildPackages
 $Spinner.Stop()
 [system.console]::SetCursorPosition(0,0)
-Write-Host "$header$grid$Footer" -NoNewline
+[Console]::Write("$header$grid$Footer")
+Start-Sleep -Seconds 3
 displayPackages($list)
-Write-Host "$header$grid$Footer" -NoNewline 
+[Console]::Write("$header$grid$Footer")
 [Console]::CursorVisible = $cursorVisibility
 Set-PSReadLineKeyHandler -Chord 'Ctrl+C' -Function CancelLine
 

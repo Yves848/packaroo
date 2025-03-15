@@ -30,8 +30,6 @@ $Script:BoxChars = @{
     "CrossDouble"       = "╬"
 }
 
-# Affichage de la table
-# $BoxChars
 $Script:checked = "▒"
 $Script:update = "📦"
 $Script:remove = "♻️"
@@ -48,5 +46,41 @@ function renderVisual {
         [console]::SetCursorPosition($x, $y)
         [Console]::Write($_)
         $y++
+    }
+}
+
+class Modal {
+    [hashtable]$TL
+    [int]$W
+    [int]$H
+    [string]$title
+    [string]$borderColor
+
+    Modal(
+        [hashtable]$TopLeft,
+        [int]$Width,
+        [int]$height,
+        [string]$title = "",
+        [string]$borderColor = "Text"
+    ) {
+        $this.TL = $TopLeft
+        $this.W = $Width
+        $this.H = $height
+        $this.title = $title
+        $this.borderColor = $borderColor
+    }
+
+    Center() {
+        $this.TL.X = ($script:width - $this.W) / 2
+        $this.TL.Y = ($script:height - $this.h) /2 
+    }
+
+    ShowModal() {
+        $content = "" | Format-SpectrePanel -Width $this.w -Border "Rounded" -Height $this.h | Out-SpectreHost
+        renderVisual -y $this.tl.y -x $this.TL.x -content $content
+    }
+
+    print() {
+        
     }
 }

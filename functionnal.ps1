@@ -10,7 +10,7 @@ function buildPackages {
     }
     $gridLine = [GridLine]::new()
     $gridLine.action = -1
-    $gridline.package = $pack
+    $gridline.packInfo = $pack
     $gridLine.selected = $false
     $lines.Add($gridLine)
   }
@@ -36,7 +36,7 @@ function buildPackages {
     [Pack]$pack = [Pack]::new($_.Name, $_.Name, $_.version, "Scoop", $_.source)
     $gridLine = [GridLine]::new()
     $gridLine.action = -1
-    $gridline.package = $pack
+    $gridline.packInfo = $pack
     $gridLine.selected = $false
     $lines.Add($gridLine)
   }
@@ -76,7 +76,7 @@ function drawList {
       $line = $line.Insert($columns[0].start,$remove)
     }
 
-    $temp = $gridline.package
+    $temp = $gridline.packInfo
     if ($temp.majavail -eq $true) {
       $line = $line.Remove($columns[0].start+3,1)
       $line = $line.Insert($columns[0].start+3,$Script:updateAvailable)
@@ -218,7 +218,7 @@ function displayPackages {
           $search = ""
           $redraw = $true
           [console]::SetCursorPosition(0,$height -5)
-          Write-Host "$Footer" -NoNewline
+          [Console]::Write("$Footer")
         } else {
           break 
         }
@@ -228,10 +228,15 @@ function displayPackages {
           $SearchMode = -not $SearchMode
           if (-not $SearchMode) {
             [console]::SetCursorPosition(0,$height -5)
-            Write-Host "$Footer" -NoNewline
+            [Console]::Write("$Footer")
           }
           $redraw = $true
         }
+      }
+      if ($key.VirtualKeyCode -eq 188) {
+        [Modal]$modal = [Modal]::new(@{X = 10; Y = 10}, 60,5,"","")
+        $modal.Center()
+        $modal.ShowModal()
       }
       if ($key.VirtualKeyCode -eq 38) {
         # Up
