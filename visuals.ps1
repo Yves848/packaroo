@@ -84,6 +84,6 @@ class Modal {
         $x1 = ($this.tl.x+1)+$x
         $y1 = ($this.tl.y+1)+$y
         [console]::SetCursorPosition($x1,$y1)
-        [console]::Write("$($text) ## $($x1) $($y1)")
+        [console]::Write("$($text)")
     }
 }

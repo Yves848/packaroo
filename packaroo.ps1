@@ -16,14 +16,18 @@ Set-PSReadLineKeyHandler -Chord 'Escape' -ScriptBlock {
 
 $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding
 
+
+Remove-Module visual -ErrorAction SilentlyContinue
+
+
 . ./system.ps1
-# maximize
-. ./dependencies.ps1
+# maximize # maximize the terminal size
 . ./visuals.ps1
+. ./dependencies.ps1
 . ./functionnal.ps1
 
 function  buildGrid {
-  $line = $BoxChars["VLine"].PadRight($width-1," ")+$BoxChars["VLine"] 
+  $line = $script:BoxChars["VLine"].PadRight($width-1," ")+$script:BoxChars["VLine"] 
   $i = 1
   while ($i -lt $columns.Count ) {
     $line = ([string]$line).Remove($columns[$i].start -1,1)
@@ -40,7 +44,7 @@ function  buildGrid {
 }
 
 function buildFooter {
-  $line = $BoxChars["TLeft"].PadRight($width-1,$BoxChars["HLine"])+$BoxChars["TRight"] 
+  $line = $script:BoxChars["TLeft"].PadRight($width-1,$script:BoxChars["HLine"])+$script:BoxChars["TRight"] 
   $i = 1
   while ($i -lt $columns.Count ) {
     $line = ([string]$line).Remove($columns[$i].start -1,1)
@@ -48,16 +52,16 @@ function buildFooter {
     $i++
   }
   $grid = $line
-  $line = $BoxChars["VLine"].PadRight($width-1," ")+$BoxChars["VLine"] 
+  $line = $script:BoxChars["VLine"].PadRight($width-1," ")+$script:BoxChars["VLine"] 
   $engines = "    $title     "
   $line = $line.Remove(2,$engines.Length)
   $engines = "[White][/][Red on White]    $title     [/][White][/]"  | Out-SpectreHost
   $line = $line.Insert(2,$engines)
   $grid += $line
-  $line = $BoxChars["VLine"].PadRight($width-1," ")+$BoxChars["VLine"] 
+  $line = $script:BoxChars["VLine"].PadRight($width-1," ")+$script:BoxChars["VLine"] 
   $grid += $line 
   $grid += $line 
-  $line = $BoxChars["BottomLeft"].PadRight($width-1,$BoxChars["HLine"])+$BoxChars["BottomRight"] 
+  $line = $script:BoxChars["BottomLeft"].PadRight($width-1,$script:BoxChars["HLine"])+$script:BoxChars["BottomRight"] 
   $grid += $line 
   return $grid
 }
@@ -104,27 +108,27 @@ function buildColumns {
 }
 function builHeader {
   $total = buildColumns
-  $top = $BoxChars["TopLeft"].PadRight($total-1,$BoxChars["HLine"])+$BoxChars["TopRight"]
+  $top = $script:BoxChars["TopLeft"].PadRight($total-1,$script:BoxChars["HLine"])+$script:BoxChars["TopRight"]
   $i = 1
   while ($i -lt $script:columns.Count ) {
     $top = ([string]$top).Remove($script:columns[$i].start -1,1)
-    $top = ([string]$top).Insert($script:columns[$i].start -1,$BoxChars["TTop"])
+    $top = ([string]$top).Insert($script:columns[$i].start -1,$script:BoxChars["TTop"])
     $i++
   }
-  $header = $BoxChars["VLine"].PadRight($total-1," ")+$BoxChars["VLine"]
+  $header = $script:BoxChars["VLine"].PadRight($total-1," ")+$script:BoxChars["VLine"]
   $i = 1
   while ($i -lt $script:columns.Count ) {
     $header = ([string]$header).Remove($script:columns[$i].start -1,1)
-    $header = ([string]$header).Insert($script:columns[$i].start -1,$BoxChars["VLine"])
+    $header = ([string]$header).Insert($script:columns[$i].start -1,$script:BoxChars["VLine"])
     $header = ([string]$header).Remove($script:columns[$i].start,([string]$headers[$i]).Length)
     $header = ([string]$header).Insert($script:columns[$i].start,$headers[$i])
     $i++
   }
-  $separator = $BoxChars["TLeft"].PadRight($total-1,$BoxChars["HLine"])+$BoxChars["TRight"]
+  $separator = $script:BoxChars["TLeft"].PadRight($total-1,$script:BoxChars["HLine"])+$script:BoxChars["TRight"]
   $i = 1
   while ($i -lt $script:columns.Count ) {
     $separator = ([string]$separator).Remove($script:columns[$i].start -1,1)
-    $separator = ([string]$separator).Insert($script:columns[$i].start -1,$BoxChars["Cross"])
+    $separator = ([string]$separator).Insert($script:columns[$i].start -1,$script:BoxChars["Cross"])
     $i++
   }
   $grid = ""
