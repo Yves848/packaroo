@@ -162,7 +162,10 @@ function displayPackages {
     }
 
     if ($filter) {
-      $visible = $list | Where-Object {(([pack]$_.package).Name -match $search) -or (([pack]$_.package).Id -match $search)}
+      $visible = $list | Where-Object {(([pack]$_.packinfo).Name -match $search) -or (([pack]$_.packinfo).Id -match $search)}
+      # draw an empty list
+      # [Console]::SetCursorPosition(0,$script:listTop+2)
+      # [Console]::Write($script:Grid)
     } else {
       $visible = $list
     }
@@ -275,9 +278,14 @@ function displayPackages {
       }
 
       if ($key.VirtualKeyCode -eq 70) {
+        # f
         if ($key.ControlKeyState -match "LeftCtrlPressed") {
           $redraw = $true
           $filter = -not $filter
+          if ($filter) {
+            [Console]::SetCursorPosition(0,$script:listTop+2)
+            [Console]::Write($script:Grid)
+          }
         }
       }
 

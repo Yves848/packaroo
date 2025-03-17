@@ -151,13 +151,13 @@ if ($Global:scoop) {
 
 [system.console]::SetCursorPosition(0,0)
 $header = builHeader
-$grid = buildGrid
+$script:grid = buildGrid
 $footer =  buildFooter
 Write-Host "$header$grid$Footer" -NoNewline
-$Spinner = [Spinner]::new("Dots",3,$height-2)
-$Spinner.Start("Loading Packages List")
+# $Spinner = [Spinner]::new("Dots",3,$height-2)
+# $Spinner.Start("Loading Packages List")
 $Script:list = buildPackages
-$Spinner.Stop()
+# $Spinner.Stop()
 [system.console]::SetCursorPosition(0,0)
 [Console]::Write("$header$grid$Footer")
 Start-Sleep -Seconds 3
