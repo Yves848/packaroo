@@ -241,6 +241,15 @@ function displayPackages {
           $modal.print(0,0,"Print Test")
         }
       }
+
+      if ($key.VirtualKeyCode -eq 187) {
+        if ($key.ControlKeyState -match "ShiftPressed") {
+          $r = [System.Management.Automation.Host.Rectangle]::new(0,0,$Global:Host.UI.RawUI.BufferSize.Width,$Global:Host.UI.RawUI.BufferSize.Height)
+          $copy = $Host.ui.RawUI.GetBufferContents($r)
+          $copy | Set-Clipboard
+        }
+      }
+
       if ($key.VirtualKeyCode -eq 38) {
         # Up
         $selected--
