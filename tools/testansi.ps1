@@ -14,10 +14,14 @@ function Convert-ToANSI {
 
   # Styles ANSI
   $ansiStyles = @{
-    "b" = "1"; # Gras
-    "i" = "3"; # Italique
-    "u" = "4"; # Souligné
-    "s" = "9"; # Barré
+    "b"         = "1"; # Gras
+    "i"         = "3"; # Italique
+    "u"         = "4"; # Souligné
+    "s"         = "9"; # Barré
+    "bold"      = "1"; # Gras
+    "italic"    = "3"; # Italique
+    "underline" = "4"; # Souligné
+    "strike"    = "9"; # Barré
   }
 
   # Fonction pour convertir une couleur HTML hexadécimale en code ANSI 256
@@ -27,7 +31,7 @@ function Convert-ToANSI {
       $r = [convert]::ToInt32($hex.Substring(1, 2), 16)
       $g = [convert]::ToInt32($hex.Substring(3, 2), 16)
       $b = [convert]::ToInt32($hex.Substring(5, 2), 16)
-      return [math]::Round((($r * 5 / 255) * 36) + (($g * 5 / 255) * 6) + ($b * 5 / 255) + 16)
+      return "$r;$g;$b"
     }
     return $null
   }
@@ -66,13 +70,13 @@ function Convert-ToANSI {
           $styles = $matches[3]
 
           # Convertir couleur nommée, raccourcis ou hexadécimales
-          $fgCode = if ($fg -match "^#") { "38;5;$(Convert-HexToANSI $fg)" } 
-          elseif ($colorMap.ContainsKey($fg)) { "38;5;$($colorMap[$fg])" }
-          elseif ($fg -match "^\d+$") { "38;5;$fg" } else { "" }
+          $fgCode = if ($fg -match "^#") { "38;2;$(Convert-HexToANSI $fg)" } 
+          elseif ($colorMap.ContainsKey($fg)) { "38;2;$($colorMap[$fg])" }
+          elseif ($fg -match "^\d+$") { "38;2;$fg" } else { "" }
 
-          $bgCode = if ($bg -match "^#") { "48;5;$(Convert-HexToANSI $bg)" }
-          elseif ($colorMap.ContainsKey($bg)) { "48;5;$($colorMap[$bg])" }
-          elseif ($bg -match "^\d+$") { "48;5;$bg" } else { "" }
+          $bgCode = if ($bg -match "^#") { "48;2;$(Convert-HexToANSI $bg)" }
+          elseif ($colorMap.ContainsKey($bg)) { "48;2;$($colorMap[$bg])" }
+          elseif ($bg -match "^\d+$") { "48;2;$bg" } else { "" }
 
           # Appliquer les styles
           $styleCodes = $styles -split "," | ForEach-Object { $ansiStyles[$_] } | Where-Object { $_ -ne $null }
