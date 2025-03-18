@@ -137,6 +137,7 @@ function drawList {
     $i++
   }
 }
+
 function drawPopup {
   $popup = "test" | Format-SpectrePadded -Padding 1 | Format-SpectrePanel -Width 25 -Header "Essai" -Border "Rounded" -Color "SlateBlue3" | Out-SpectreHost
   [System.Console]::SetCursorPosition(20,20)
