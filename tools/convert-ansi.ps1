@@ -47,7 +47,7 @@ function Convert-ToANSI {
     $output = ""
 
     # Regex améliorée pour capturer les balises imbriquées
-    $pattern = "<([\w#+-]+)(?: on ([\w#+-]+))?(?:,([buis,]*))?>|<\/>"
+    $pattern = "<([\w#+-]+)(?:\/([\w#+-]+))?(?:,([buis,]*))?>|<\/>"
 
     $m = [Regex]::Matches($text, $pattern)
     $i = 0
@@ -55,9 +55,11 @@ function Convert-ToANSI {
     while ($i -lt $m.Count) {
       $tag = $m[$i]
       if ($tag.Value -ne "</>") {
-        $output += $text.Substring($index, $tag.Index - $Index)
-        $index += $tag.Length
       }
+      else {
+        $output += $text.Substring($index, $tag.Index - $index)
+      }
+      $index = $index + $tag.index + $tag.Length
       $i++
     }
     
@@ -70,10 +72,10 @@ function Convert-ToANSI {
 
 # 🔥 Exemple d'utilisation :
 $demoText = @"
-<r on k,b>Texte rouge gras sur noir</>
-<#FF5733 on #222222,i>Texte en orange hex sur gris foncé et italique</>
+<r/k,b>Texte rouge gras sur noir</>
+<#FF5733/#222222,i>Texte en orange hex sur gris foncé et italique</>
 <b><u><y+>Texte souligné, gras, jaune clair</></></>
-<c on b><b>Texte cyan sur fond bleu</> et texte normal</>
+<c/b><b>Texte cyan sur fond bleu</> et texte normal</>
 "@
 
 Write-Host (Convert-ToANSI $demoText)
