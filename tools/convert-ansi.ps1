@@ -43,7 +43,7 @@ function Convert-ToANSI {
     param ([string]$text)
     $Stack = [System.Collections.Generic.Stack[string]]@()
     # $stack = @() # Pile pour gérer l'imbrication des balises
-    
+    $text = $Text -replace "`n", "``n"
     $output = ""
 
     # Regex améliorée pour capturer les balises imbriquées
@@ -55,11 +55,12 @@ function Convert-ToANSI {
     while ($i -lt $m.Count) {
       $tag = $m[$i]
       if ($tag.Value -ne "</>") {
+        
+        $index = $tag.index + $tag.Length
       }
       else {
-        $output += $text.Substring($index, $tag.Index - $index)
+        $output += $text.Substring($index, $tag.Index - $index - 1)
       }
-      $index = $index + $tag.index + $tag.Length
       $i++
     }
     
