@@ -17,6 +17,7 @@ $ansiStyles = @{
   "underline" = "4"; # Souligné
   "strike"    = "9"; # Barré
 }
+
 function Convert-HexToANSI {
   param ([string]$hex)
   if ($hex -match "^#([A-Fa-f0-9]{6})$") {
@@ -41,7 +42,6 @@ function Convert-ToANSI {
   # Fonction pour appliquer les styles et couleurs ANSI avec gestion des balises imbriquées
   $esc = "`e["
   $Stack = [System.Collections.Generic.Stack[string]]@()
-  $Seen = [System.Collections.Generic.HashSet[int]]@()
   # $stack = @() # Stack pour garder les balises fermantes dans l'odre où elles devront être appliquées.
   $output = ""
 
