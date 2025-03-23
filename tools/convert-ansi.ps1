@@ -41,7 +41,7 @@ function Convert-ToANSI {
 
   # Fonction pour appliquer les styles et couleurs ANSI avec gestion des balises imbriquées
   $esc = "`e["
-  $Stack = [System.Collections.Generic.Stack[string]]@()
+  $Stack = [System.Collections.Generic.Stack[PSCustomObject]]@()
   # $stack = @() # Stack pour garder les balises fermantes dans l'odre où elles devront être appliquées.
   $output = ""
 
@@ -52,54 +52,16 @@ function Convert-ToANSI {
   $i = 0
   $pos = 0
   while ($i -lt $m.Count) {
+    # vérifier si il y a déjà un tag dans la stack et voir si il est contigu ou pas
+    [PSCustomObject]$prev = $null
+    $null = $stack.tryPeek([ref] $prev) 
     $tag = $m[$i]
-    if ($tag.Value -ne "</>") {
-      # C'est une balise ouvrante.
-      $t = $esc
-      $code = $tag.Value.Replace("<", "").Replace(">", "")
-      $parts = $code.Split(",")
-      if ($parts.Count -eq 2) {
-        $colors = $parts[0]
-        $styles = $parts[1]
-      }
-      else {
-        $subparts = $parts.split("/")
-        if ($subparts.Count -eq 1) {
-          if ($ansiStyles.ContainsKey($subparts)) {
-            # style
-            # Write-Host "style"
-            $style = $ansiStyles[$subparts]
-            $output += "$($esc)$($style)m"
-            $stack.push("2$($style)")
-          }
-          else {
-            # color
-            # Write-Host "color"
-            $color = $colorMap[$subparts]
-            $output += "$($esc)38;$($color)m"
-            $stack.Push($color)
-          }
-        }
-      }
-    }
-    else {
-      # balise fermante
-      if ($Stack.Count -gt 1) {
-        $closetag = $stack.pop()
-        $output += "Text"
-        if ($closetag.Contains("`e[38") -or $closetag.Contains("`e[48")) {
-          $closetag = $stack.pop()
-          $output += "`e[0m$($esc)$($closetag)m"
-        }
-        else {
-          $output += "$($esc)$($closetag)m"
-        }
-      }
-      else {
-        $output += "`e[0m"
-        $output += "Fin"
-      }
-    }
+    $pos = $tag.Index + $tag.Length
+    $Stack.Push($tag)
+    Write-Host "Pos : $($pos)"
+    Write-Host ("tag : $($tag.Value) Index : $($tag.Index)  Lenght : $($tag.Length)")
+    Write-Host ("prev tag : $($prev.Value) Index : $($prev.Index)  Lenght : $($prev.Length)")
+
     $i++
   }
   return $output
@@ -112,7 +74,7 @@ function Convert-ToANSI {
 # <b><u><y+>Texte souligné, gras, jaune clair</></></>
 # <c/b><b>Texte cyan sur fond bleu</> et texte normal</>
 # "@
-$demotext = "<c+><u>Test</><i> Test2 </> Fin"
+$demotext = "<k/w+>Noir sur blanc vif<o><i><u>Noir sur fond blanc vif, gras, italique, souligné</></>Noir sur blanc vif, gras</></> Normal"
 Write-Host $demoText
 Write-Host "".PadLeft($host.UI.RawUI.BufferSize.Width, "-")
 
