@@ -18,6 +18,8 @@ $ansiStyles = @{
   "strike"    = "9"; # Barré
 }
 
+$esc = "`e["
+
 function Convert-HexToANSI {
   param ([string]$hex)
   if ($hex -match "^#([A-Fa-f0-9]{6})$") {
@@ -27,6 +29,38 @@ function Convert-HexToANSI {
     return "$r;$g;$b"
   }
   return $null
+}
+
+function Convert-TagToANSI {
+  param(
+    [string]$tag
+  )
+  # Conversion d'un tag en code ANSI
+  $ansi = ""
+  $parts = $tag.Split(",") # split du tag : gauche de la virgule = les couleurs.  droite de la virgule = les styles
+  if ($parts.count -eq 2) {
+    # cas le plus simple, il y a des couleurs et des styles
+    $colors = $parts[0]
+    $styles = $parts[1]
+
+    # traiter les couleurs
+    $temp = $colors.Split("/")
+    if ($temp.count -gt 1) {
+      # Il y a plus d'une couleur => FG/BG
+      $fg = $temp[0]
+      $bg = $temp[1]
+      
+    }
+    else {
+      # Il n'y a qu'une seule couleur => déterminer si c'est le FG ou le BG
+    }
+    
+
+  }
+  else {
+    # uniquement des couleurs ou des styles.
+    
+  }
 }
 
 function Convert-ToANSI {
@@ -40,7 +74,7 @@ function Convert-ToANSI {
   
 
   # Fonction pour appliquer les styles et couleurs ANSI avec gestion des balises imbriquées
-  $esc = "`e["
+  
   $Stack = [System.Collections.Generic.Stack[PSCustomObject]]@()
   # $stack = @() # Stack pour garder les balises fermantes dans l'odre où elles devront être appliquées.
   $output = ""
@@ -74,7 +108,7 @@ function Convert-ToANSI {
 # <b><u><y+>Texte souligné, gras, jaune clair</></></>
 # <c/b><b>Texte cyan sur fond bleu</> et texte normal</>
 # "@
-$demotext = "<k/w+>Noir sur blanc vif<o><i><u>Noir sur fond blanc vif, gras, italique, souligné</></>Noir sur blanc vif, gras</></> Normal"
+$demotext = "<k/w+>Noir sur blanc vif<o><i><u>Noir sur blanc vif, gras, italique, souligné</></>Noir sur blanc vif, gras</></> Normal"
 Write-Host $demoText
 Write-Host "".PadLeft($host.UI.RawUI.BufferSize.Width, "-")
 

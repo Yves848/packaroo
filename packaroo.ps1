@@ -21,7 +21,7 @@ Remove-Module visual -ErrorAction SilentlyContinue
 
 
 . ./system.ps1
-# maximize # maximize the terminal size
+maximize # maximize the terminal size
 . ./visuals.ps1
 . ./dependencies.ps1
 . ./functionnal.ps1
